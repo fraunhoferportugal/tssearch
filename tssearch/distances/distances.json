@@ -1,0 +1,97 @@
+{
+  "elastic": {
+    "Time Warp Edit Distance": {
+      "multivariate": "no",
+      "description": "",
+      "function": "twed",
+      "parameters": {
+        "nu": 1,
+        "lmbda": 0,
+        "degree": 2,
+        "time": "true"
+      },
+      "use": "yes"
+    },
+    "Dynamic Time Warping": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "dtw",
+      "parameters": {
+        "dtw_type": "dtw",
+        "alpha": 1
+      },
+      "use": "yes"
+    },
+    "Longest Common Subsequence": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "lcss",
+      "parameters": {
+        "eps": 1,
+        "report": "distance"
+      },
+      "use": "yes"
+    }
+  },
+  "time": {
+    "Time Alignment Measurement": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "tam",
+      "parameters": "",
+      "use": "yes"
+    }
+  },
+  "lockstep": {
+    "Euclidean Distance": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "euclidean_distance",
+      "parameters": "",
+      "use": "yes"
+    },
+    "Minkowski Distance": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "minkowski_distance",
+      "parameters":
+            {"p":  3},
+      "use": "no"
+    },
+    "Manhattan Distance": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "manhattan_distance",
+      "parameters": "",
+      "use": "yes"
+    },
+    "Chebyshev Distance": {
+      "multivariate": "yes",
+      "description": "",
+      "function": "chebyshev_distance",
+      "parameters": "",
+      "use": "yes"
+    },
+    "Cross Correlation Distance": {
+      "multivariate": "no",
+      "description": "",
+      "function": "correlation_distance",
+      "parameters": "",
+      "use": "no"
+    },
+    "Pearson Correlation Distance": {
+      "multivariate": "no",
+      "description": "",
+      "function": "pearson_correlation",
+      "parameters": "",
+      "use": "no"
+    },
+    "Short Time Series Distance": {
+      "multivariate": "no",
+      "description": "",
+      "function": "short_time_series_distance",
+      "parameters": "",
+      "use": "no"
+    }
+  }
+}
