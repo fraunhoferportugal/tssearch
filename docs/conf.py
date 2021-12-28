@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# TSFRESH documentation build configuration file, created by
+# TSSEARCH documentation build configuration file, created by
 # sphinx-quickstart on Tue Dez  28 18:37:41 2021.
 #
 # This file is execfile()d with the current directory set to its
@@ -25,7 +25,7 @@ if os.environ.get('READTHEDOCS', None) == 'True':
     __location__ = os.path.join(os.getcwd(), os.path.dirname(inspect.getfile(inspect.currentframe())))
 
     # output_dir = os.path.join(__location__, "../docs/descriptions/modules")
-    module_dir = os.path.join(__location__, "../tsfresh")
+    module_dir = os.path.join(__location__, "../tssearch")
     cmd_line_template = "sphinx-apidoc -f -o {outputdir} {moduledir}"
     cmd_line = cmd_line_template.format(outputdir=output_dir, moduledir=module_dir)
     apidoc.main(cmd_line.split(" "))
@@ -116,7 +116,7 @@ html_static_path = []
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'TSFRESHdoc'
+htmlhelp_basename = 'TSSEARCHdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -143,7 +143,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'TSFRESH.tex', u'TSFRESH Documentation',
+    (master_doc, 'TSSEARCH.tex', u'TSSEARCH Documentation',
      u'Fraunhofer AICOS', 'manual'),
 ]
 
@@ -153,7 +153,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'tsfresh', u'TSFRESH Documentation',
+    (master_doc, 'tssearch', u'TSSEARCH Documentation',
      [author], 1)
 ]
 
@@ -164,8 +164,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'TSFRESH', u'TSFRESH Documentation',
-     author, 'TSFRESH', 'One line description of project.',
+    (master_doc, 'TSSEARCH', u'TSSEARCH Documentation',
+     author, 'TSSEARCH', 'One line description of project.',
      'Miscellaneous'),
 ]
 
