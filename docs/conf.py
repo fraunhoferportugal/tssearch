@@ -61,7 +61,7 @@ master_doc = 'index'
 import datetime
 now = datetime.datetime.today()
 project = u'TSSEARCH'
-copyright = u'2021, Fraunhofer AICOS'
+copyright = u'2022, Fraunhofer AICOS'
 author = u'Fraunhofer AICOS'
 
 # The version info for the project you're documenting, acts as replacement for

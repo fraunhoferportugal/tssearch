@@ -1,5 +1,5 @@
-Welcome to TSFRESH documentation!
-===============================
+Welcome to TSSEARCH documentation!
+==================================
 
 Time Series Subsequence Search Python package (TSSEARCH for short) is a Python package that assists researchers in exploratory analysis for query search and time series segmentation without requiring significant programming effort. It contains curated routines for query and subsequence search. TSSEARCH installation is straightforward and goes along with startup code examples. Our goal is to provide the tools to get faster insights for your time series.
 
@@ -16,6 +16,15 @@ Contents
 ========
 
 In development
+
+.. toctree::
+   :maxdepth: 2
+
+   Lockstep Distances <descriptions/lockstep_distances>
+   Elastic Distances <descriptions/elastic_distances>
+   Authors <authors>
+   Changelog <changelog>
+   License <license>
 
 Installation
 ============
