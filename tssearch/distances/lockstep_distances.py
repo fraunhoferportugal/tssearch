@@ -6,7 +6,7 @@ from tssearch.distances.lockstep_utils import _lnorm_multidimensional, _lnorm_un
 
 
 def euclidean_distance(x, y, weight=None):
-    """Computes the euclidean distance between two time series.
+    """Computes the Euclidean distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -23,7 +23,6 @@ def euclidean_distance(x, y, weight=None):
         Euclidean distance value
 
     """
-
     p = 2
 
     if len(x) != len(y):
@@ -41,7 +40,7 @@ def euclidean_distance(x, y, weight=None):
 
 
 def minkowski_distance(x, y, weight=None, p=3):
-    """Computes the minkowski distance between two time series.
+    """Computes the Minkowski distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -58,7 +57,6 @@ def minkowski_distance(x, y, weight=None, p=3):
         Minkowski distance value
 
     """
-
     if len(x) != len(y):
         x, y = interpolation(x, y)
 
@@ -77,7 +75,7 @@ def minkowski_distance(x, y, weight=None, p=3):
 
 
 def manhattan_distance(x, y, weight=None):
-    """Computes the manhattan distance between two time series.
+    """Computes the Manhattan distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -112,7 +110,7 @@ def manhattan_distance(x, y, weight=None):
 
 
 def chebyshev_distance(x, y, weight=None):
-    """Computes the chebyshev distance between two time series.
+    """Computes the Chebyshev distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -129,7 +127,6 @@ def chebyshev_distance(x, y, weight=None):
         Chebyshev distance value
 
     """
-
     p = np.inf
 
     if len(x) != len(y):
@@ -147,7 +144,7 @@ def chebyshev_distance(x, y, weight=None):
 
 
 def correlation_distance(x, y, weight=None):
-    """Computes the correlation between two time series.
+    """Computes the correlation distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -164,7 +161,6 @@ def correlation_distance(x, y, weight=None):
         Correlation distance value
 
     """
-
     if len(x) != len(y):
         x, y = interpolation(x, y)
 
@@ -174,7 +170,23 @@ def correlation_distance(x, y, weight=None):
 
 
 def pearson_correlation(x, y, beta=None):
+    """Computes the Pearson correlation between two time series.
 
+    If the time series do not have the same length, an interpolation is performed.
+
+    Parameters
+    ----------
+    x : nd-array
+        Time series x
+    y : nd-array
+        Time series y
+
+    Returns
+    -------
+    float
+        Pearson correlation value
+
+    """
     if len(x) != len(y):
         x, y = interpolation(x, y)
 
@@ -188,18 +200,26 @@ def pearson_correlation(x, y, beta=None):
 
 
 def short_time_series_distance(x, y, tx=None, ty=None):
-    """The Short Time Series distance (STS) introduced by M ̈oller-Levet, Klawonn, Cho, and
-    Wolkenhauer (2003)
+    """Computes the short time series distance (STS) between two time series.
+
+    Reference: Möller-Levet, C. S., Klawonn, F., Cho, K., and Wolkenhauer, O. (2003).
 
     Parameters
     ----------
-    x
-    y
-    tx
-    ty
+    x : nd-array
+        Time series x
+    y : nd-array
+        Time series y
+    tx : nd-array
+        Sampling index of time series x
+    ty : nd-array
+        Sampling index of time series y
 
     Returns
     -------
+    float
+        Short time series distance value
+
     """
     if len(x) != len(y):
         x, y = interpolation(x, y)
@@ -215,7 +235,7 @@ def short_time_series_distance(x, y, tx=None, ty=None):
 
 
 def braycurtis_distance(x, y, weight=None):
-    """Computes the braycurtis distance between two time series.
+    """Computes the Braycurtis distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -232,7 +252,6 @@ def braycurtis_distance(x, y, weight=None):
         Braycurtis distance value
 
     """
-
     if len(x) != len(y):
         x, y = interpolation(x, y)
 
@@ -242,7 +261,7 @@ def braycurtis_distance(x, y, weight=None):
 
 
 def canberra_distance(x, y, weight=None):
-    """Computes the canberra distance between two time series.
+    """Computes the Canberra distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -268,7 +287,7 @@ def canberra_distance(x, y, weight=None):
 
 
 def cosine_distance(x, y, weight=None):
-    """Computes the correlation between two time series.
+    """Computes the cosine distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -282,10 +301,9 @@ def cosine_distance(x, y, weight=None):
     Returns
     -------
     float
-        Correlation distance value
+        Cosine distance value
 
     """
-
     if len(x) != len(y):
         x, y = interpolation(x, y)
 
@@ -295,43 +313,7 @@ def cosine_distance(x, y, weight=None):
 
 
 def mahalanobis_distance(x, y, weight=None):
-    """Computes the mahalanobis between two time series.
-
-    If the time series do not have the same length, an interpolation is performed.
-
-    Parameters
-    ----------
-    x : nd-array
-        Time series x
-    y : nd-array
-        Time series y
-    """
-
-    if len(x) != len(y):
-        x, y = interpolation(x, y)
-
-    mahalanobis_d = distance.mahalanobis(x, y, weight)
-
-    return mahalanobis_d
-
-
-def sqeuclidean_distance(x, y, weight=None):
-    """Computes the sqeuclidean between two time series.
-
-    If the time series do not have the same length, an interpolation is performed.
-
-    """
-
-    if len(x) != len(y):
-        x, y = interpolation(x, y)
-
-    sqeuclidean_d = distance.sqeuclidean(x, y, weight)
-
-    return sqeuclidean_d
-
-
-def hamming_distance(x, y, weight=None):
-    """Computes the hamming between two time series.
+    """Computes the Mahalanobis distance between two time series.
 
     If the time series do not have the same length, an interpolation is performed.
 
@@ -345,10 +327,61 @@ def hamming_distance(x, y, weight=None):
     Returns
     -------
     float
-        hamming distance value
+        Mahalanobis distance value
 
     """
+    if len(x) != len(y):
+        x, y = interpolation(x, y)
 
+    mahalanobis_d = distance.mahalanobis(x, y, weight)
+
+    return mahalanobis_d
+
+
+def sqeuclidean_distance(x, y, weight=None):
+    """Computes the squared Euclidean distance between two time series.
+
+    If the time series do not have the same length, an interpolation is performed.
+
+    Parameters
+    ----------
+    x : nd-array
+        Time series x
+    y : nd-array
+        Time series y
+
+    Returns
+    -------
+    float
+        Squared Euclidean distance value
+
+    """
+    if len(x) != len(y):
+        x, y = interpolation(x, y)
+
+    sqeuclidean_d = distance.sqeuclidean(x, y, weight)
+
+    return sqeuclidean_d
+
+
+def hamming_distance(x, y, weight=None):
+    """Computes the Hamming distance between two time series.
+
+    If the time series do not have the same length, an interpolation is performed.
+
+    Parameters
+    ----------
+    x : nd-array
+        Time series x
+    y : nd-array
+        Time series y
+
+    Returns
+    -------
+    float
+        Hamming distance value
+
+    """
     if len(x) != len(y):
         x, y = interpolation(x, y)
 
