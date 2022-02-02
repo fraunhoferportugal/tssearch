@@ -65,22 +65,22 @@ def _multidimensional_cost_matrix(x, y, weight):
 
 
 @njit(nogil=True, fastmath=True)
-def _accumulated_cost_matrix(c):
+def _accumulated_cost_matrix(ac):
     """Fast computation of accumulated cost matrix using cost matrix.
 
     Parameters
     ----------
-    c: nd-array
-        The cost matrix.
+    ac: nd-array
+        Given cost matrix c, ac = acc_initialization(...), ac[1:, 1:] = c.
 
     Returns
     -------
         The accumulated cost matrix.
     """
-    for i in range(c.shape[0] - 1):
-        for j in range(c.shape[1] - 1):
-            c[i + 1, j + 1] += min(c[i, j + 1], c[i + 1, j], c[i, j])
-    return c
+    for i in range(ac.shape[0] - 1):
+        for j in range(ac.shape[1] - 1):
+            ac[i + 1, j + 1] += min(ac[i, j + 1], ac[i + 1, j], ac[i, j])
+    return ac
 
 
 def acc_initialization(x, y, _type, tolerance=0):
@@ -228,13 +228,13 @@ def accumulated_cost_matrix(c, **kwargs):
 
 
 @njit(nogil=True, fastmath=True)
-def traceback(c):
+def traceback(ac):
     """Computes the traceback path of the matrix c.
 
     Parameters
     ----------
-    c: nd-array
-        The cost matrix.
+    ac: nd-array
+        The accumulated cost matrix.
 
     Returns
     -------
@@ -242,13 +242,13 @@ def traceback(c):
 
     """
 
-    i, j = np.array(c.shape) - 2
+    i, j = np.array(ac.shape) - 2
     p, q = [i], [j]
     while (i > 0) and (j > 0):
         tb = 0
-        if c[i, j + 1] < c[i, j]:
+        if ac[i, j + 1] < ac[i, j]:
             tb = 1
-        if c[i + 1, j] < c[i, j + tb]:
+        if ac[i + 1, j] < ac[i, j + tb]:
             tb = 2
         if tb == 0:
             i -= 1
@@ -272,26 +272,26 @@ def traceback(c):
 
 
 @njit(nogil=True, fastmath=True)
-def traceback_adj(c):
+def traceback_adj(ac):
     """Computes the adjusted traceback path of the matrix c.
 
     Parameters
     ----------
-    c: nd-array
-        The cost matrix.
+    ac: nd-array
+        The accumulated cost matrix.
 
     Returns
     -------
         Coordinates p and q of the minimum path adjusted.
 
     """
-    i, j = np.array(c.shape) - 2
+    i, j = np.array(ac.shape) - 2
     p, q = [i], [j]
     while (i > 0) and (j > 0):
         tb = 0
-        if c[i, j + 1] < c[i, j]:
+        if ac[i, j + 1] < ac[i, j]:
             tb = 1
-        if c[i + 1, j] < c[i, j + tb]:
+        if ac[i + 1, j] < ac[i, j + tb]:
             tb = 2
         if tb == 0:
             i -= 1
@@ -309,19 +309,19 @@ def traceback_adj(c):
     return np.array(p), np.array(q)
 
 
-def backtracking(c):
+def backtracking(ac):
     """Compute the most cost-efficient path.
 
     Parameters
     ----------
-    c: nd-array
-        The cost matrix.
+    ac: nd-array
+        The accumulated cost matrix.
 
     Returns
     -------
          Coordinates of the most cost-efficient path.
     """
-    x = np.shape(c)
+    x = np.shape(ac)
     i = x[0] - 1
     j = x[1] - 1
 
@@ -337,11 +337,11 @@ def backtracking(c):
         C = np.ones((3, 1)) * np.inf
 
         # Keep data points in both time series
-        C[0] = c[i - 1, j - 1]
+        C[0] = ac[i - 1, j - 1]
         # Deletion in A
-        C[1] = c[i - 1, j]
+        C[1] = ac[i - 1, j]
         # Deletion in B
-        C[2] = c[i, j - 1]
+        C[2] = ac[i, j - 1]
 
         # Find the index for the lowest cost
         idx = np.argmin(C)
@@ -585,22 +585,22 @@ def lcss_accumulated_matrix(x, y, eps):
 
     Returns
     -------
-    c : nd-array
-            The cost matrix.
+    ac : nd-array
+            The accumulated cost matrix.
     """
 
     xl, yl = len(x), len(y)
 
-    c = np.zeros((xl + 1, yl + 1))
+    ac = np.zeros((xl + 1, yl + 1))
 
     for i in range(1, xl + 1):
         for j in range(1, yl + 1):
             if _lcss_point_dist(x[i - 1, :], y[j - 1, :]) <= eps:
-                c[i, j] = 1 + c[i - 1, j - 1]
+                ac[i, j] = 1 + ac[i - 1, j - 1]
             else:
-                c[i, j] = max(c[i, j - 1], c[i - 1, j])
+                ac[i, j] = max(ac[i, j - 1], ac[i - 1, j])
 
-    return c
+    return ac
 
 
 def lcss_path(x, y, c, eps):
