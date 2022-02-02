@@ -185,8 +185,8 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
     -------
     d: float
         The TWED distance.
-    c: nd-array
-        The local cost matrix.
+    ac: nd-array
+        The accumulated cost matrix.
     path: nd-array
         The optimal warping path between the two sequences.
     """
@@ -205,7 +205,7 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
         return None, None
 
     # Dynamical programming
-    c = acc_initialization(len(x), len(y), report)
+    ac = acc_initialization(len(x), len(y), report)
 
     # Add padding
     query = np.array([0] + list(x))
@@ -222,26 +222,26 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
             # Calculate and save cost of various operations
             C = np.ones((3, 1)) * np.inf
             # Deletion in A
-            C[0] = c[i - 1, j] + dlp(query[i - 1], query[i], degree) + nu * (tq[i] - tq[i - 1]) + lmbda
+            C[0] = ac[i - 1, j] + dlp(query[i - 1], query[i], degree) + nu * (tq[i] - tq[i - 1]) + lmbda
             # Deletion in B
-            C[1] = c[i, j - 1] + dlp(sequence[j - 1], sequence[j], degree) + nu * (ts[j] - ts[j - 1]) + lmbda
+            C[1] = ac[i, j - 1] + dlp(sequence[j - 1], sequence[j], degree) + nu * (ts[j] - ts[j - 1]) + lmbda
             # Keep data points in both time series
             C[2] = (
-                c[i - 1, j - 1]
+                ac[i - 1, j - 1]
                 + dlp(query[i], sequence[j], degree)
                 + dlp(query[i - 1], sequence[j - 1], degree)
                 + nu * (abs(tq[i] - ts[j]) + abs(tq[i - 1] - ts[j - 1]))
             )
             # Choose the operation with the minimal cost and update c Matrix
-            c[i, j] = np.min(C)
+            ac[i, j] = np.min(C)
 
     if report == "cost_matrix":
-        return c
+        return ac
     elif report == 'search':
-        d = c[n - 1, :]
-        return d, c
+        d = ac[n - 1, :]
+        return d, ac
     elif report == 'path':
-        path = backtracking(c)
+        path = backtracking(ac)
         return path
     else:  # report = 'search'
-        return c[n - 1, m - 1]
+        return ac[n - 1, m - 1]
