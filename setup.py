@@ -6,12 +6,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tssearch",
-    version="0.0.1",
+    version="0.1.0",
     author="Fraunhofer Portugal",
     description="Library for time series subsequence search",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    download_url="https://github.com/fraunhoferportugal/tssearch/archive/refs/tags/v0.1.0.tar.gz",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
