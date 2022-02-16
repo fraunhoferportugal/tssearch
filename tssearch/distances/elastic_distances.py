@@ -14,13 +14,15 @@ from tssearch.distances.elastic_utils import (
 
 def dtw(x, y, weight=None, **kwargs):
     """Computes Dynamic Time Warping (DTW) of two time series.
-    x: nd-array
-        The reference signal.
-    y: nd-array
-        The estimated signal.
-    dist: function
-        The distance used as a local cost measure. None defaults to the squared euclidean distance
 
+    Parameters
+    ----------
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+    dist: function
+        The distance used as a local cost measure. None defaults to the squared euclidean distance.
     \**kwargs:
     See below:
 
@@ -43,14 +45,12 @@ def dtw(x, y, weight=None, **kwargs):
 
     Returns
     -------
-           d: float
-            The DTW distance.
-           C: nd-array
-            The local cost matrix.
-           ac: nd-array
-            The accumulated cost matrix.
-           path nd-array
-            The optimal warping path between the two sequences.
+    d: float
+        The DTW distance.
+    ac: nd-array
+        The accumulated cost matrix.
+    path: nd-array
+        The optimal warping path between the two sequences.
     """
     xl, yl = len(x), len(y)
 
@@ -83,13 +83,15 @@ def dtw(x, y, weight=None, **kwargs):
 
 def lcss(x, y, eps=1, **kwargs):
     """Computes the Longest Common Subsequence (LCSS) distance between two numeric time series.
-    x: nd-array
-        The reference signal.
-    y: nd-array
-        The estimated signal.
-    eps : float
-            Amplitude matching threshold.
 
+    Parameters
+    ----------
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+    eps : float
+        Amplitude matching threshold.
     \**kwargs:
     See below:
 
@@ -99,14 +101,12 @@ def lcss(x, y, eps=1, **kwargs):
 
     Returns
     -------
-    Returns
-    -------
-           d: float
-            The LCSS distance.
-           C: nd-array
-            The similarity matrix.
-           path nd-array
-            The optimal path between the two sequences.
+    d: float
+        The LCSS distance.
+    ac: nd-array
+        The similarity matrix.
+    path: nd-array
+        The optimal path between the two sequences.
     """
 
     window = kwargs.get("window", None)
@@ -117,26 +117,42 @@ def lcss(x, y, eps=1, **kwargs):
         x = x.reshape(-1, 1)
         y = y.reshape(-1, 1)
 
-    sim_mat = lcss_accumulated_matrix(x, y, eps=eps)
-    path = lcss_path(x, y, sim_mat, eps=eps)
-    sim_score = lcss_score(sim_mat=sim_mat)
+    ac = lcss_accumulated_matrix(x, y, eps=eps)
+    path = lcss_path(x, y, ac, eps=eps)
+    sim_score = lcss_score(ac)
 
     if report == "cost_matrix":
-        return sim_mat
+        return ac
     elif report == "search":
-        return sim_score, sim_mat
+        return sim_score, ac
     elif report == "path":
         return path
     else:
         return sim_score
 
 
-def dlp(A, B, p=2):
-    cost = np.sum(np.power(np.abs(A - B), p))
-    return np.power(cost, 1 / p)
+def dlp(x, y, degree=2):
+    """Computes Lp norm distance between two time series.
+
+    Parameters
+    ----------
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+    degree: int
+        Lp norm distance degree for local cost computation.
+
+    Returns
+    -------
+        The LP distance.
+    """
+
+    cost = np.sum(np.power(np.abs(x - y), degree))
+    return np.power(cost, 1 / degree)
 
 
-def twed(query, sequence, tq, ts, nu=0.001, lmbda=1.0, degree=2, report="distance"):
+def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
     """Computes Time Warp Edit Distance (TWED) of two time series.
 
     Reference :
@@ -144,42 +160,44 @@ def twed(query, sequence, tq, ts, nu=0.001, lmbda=1.0, degree=2, report="distanc
        IEEE Transactions on Pattern Analysis and Machine Intelligence. 31 (2): 306–318. arXiv:cs/0703033
        http://people.irisa.fr/Pierre-Francois.Marteau/
 
-    query: nd-array
-        The reference signal.
-    sequence: nd-array
-        The estimated signal.
-    tq: nd-array
-        Time stamp reference signal.
-    ts: nd-array
-        Time stamp estimated signal.
+    Parameters
+    ----------
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+    tx: nd-array
+        Time stamp time series x.
+    ty: nd-array
+        Time stamp time series y.
     nu: int
         Stiffness parameter (nu >= 0)
-            nu = 0, TWED distance measure on amplitude
-            nu > 0, TWED distance measure on amplitude x time
+            nu = 0, TWED distance measure on amplitude.
+            nu > 0, TWED distance measure on amplitude x time.
     lmbda: int
         Penalty for deletion operation (lmbda >= 0).
     degree: int
         Lp norm distance degree for local cost computation.
     report: str
-        distance, cost matrix, path
+        distance, cost matrix, path.
 
     Returns
     -------
-           d: float
-            The TWED distance.
-           c: nd-array
-            The local cost matrix.
-           path: nd-array
-            The optimal warping path between the two sequences.
+    d: float
+        The TWED distance.
+    ac: nd-array
+        The accumulated cost matrix.
+    path: nd-array
+        The optimal warping path between the two sequences.
     """
 
     # Check if input arguments
-    if len(query) != len(tq):
-        print("The length of A is not equal length of timeSA")
+    if len(x) != len(tx):
+        print("The length of x is not equal length of tx")
         return None, None
 
-    if len(sequence) != len(ts):
-        print("The length of B is not equal length of timeSB")
+    if len(y) != len(ty):
+        print("The length of y is not equal length of ty")
         return None, None
 
     if nu < 0:
@@ -187,13 +205,13 @@ def twed(query, sequence, tq, ts, nu=0.001, lmbda=1.0, degree=2, report="distanc
         return None, None
 
     # Dynamical programming
-    DP = acc_initialization(len(query), len(sequence), report)
+    ac = acc_initialization(len(x), len(y), report)
 
     # Add padding
-    query = np.array([0] + list(query))
-    tq = np.array([0] + list(tq))
-    sequence = np.array([0] + list(sequence))
-    ts = np.array([0] + list(ts))
+    query = np.array([0] + list(x))
+    tq = np.array([0] + list(tx))
+    sequence = np.array([0] + list(y))
+    ts = np.array([0] + list(ty))
 
     n = len(query)
     m = len(sequence)
@@ -204,25 +222,26 @@ def twed(query, sequence, tq, ts, nu=0.001, lmbda=1.0, degree=2, report="distanc
             # Calculate and save cost of various operations
             C = np.ones((3, 1)) * np.inf
             # Deletion in A
-            C[0] = DP[i - 1, j] + dlp(query[i - 1], query[i], degree) + nu * (tq[i] - tq[i - 1]) + lmbda
+            C[0] = ac[i - 1, j] + dlp(query[i - 1], query[i], degree) + nu * (tq[i] - tq[i - 1]) + lmbda
             # Deletion in B
-            C[1] = DP[i, j - 1] + dlp(sequence[j - 1], sequence[j], degree) + nu * (ts[j] - ts[j - 1]) + lmbda
+            C[1] = ac[i, j - 1] + dlp(sequence[j - 1], sequence[j], degree) + nu * (ts[j] - ts[j - 1]) + lmbda
             # Keep data points in both time series
             C[2] = (
-                DP[i - 1, j - 1]
+                ac[i - 1, j - 1]
                 + dlp(query[i], sequence[j], degree)
                 + dlp(query[i - 1], sequence[j - 1], degree)
                 + nu * (abs(tq[i] - ts[j]) + abs(tq[i - 1] - ts[j - 1]))
             )
-            # Choose the operation with the minimal cost and update DP Matrix
-            DP[i, j] = np.min(C)
+            # Choose the operation with the minimal cost and update c Matrix
+            ac[i, j] = np.min(C)
 
     if report == "cost_matrix":
-        return DP
+        return ac
     elif report == 'search':
-        return DP[n - 1, :], DP
+        d = ac[n - 1, :]
+        return d, ac
     elif report == 'path':
-        path = backtracking(DP)
+        path = backtracking(ac)
         return path
     else:  # report = 'search'
-        return DP[n - 1, m - 1]
+        return ac[n - 1, m - 1]

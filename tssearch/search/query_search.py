@@ -33,7 +33,7 @@ def time_series_search(dict_distances, query, sequence, tq=None, ts=None, weight
                             path = [lcss_path(query_copy, sequence_copy, ac, eps)]
                         else:
                             path = [lcss_path(query, sequence, ac, eps)]
-                        distance_results[dist]["path_dist"] = [lcss_score(sim_mat=ac)]
+                        distance_results[dist]["path_dist"] = [lcss_score(ac)]
                         end_index = [path_i[1][-1] for path_i in path]
                     else:
                         end_index = start_sequences_index(distance, output=output, overlap=l_query / 2)

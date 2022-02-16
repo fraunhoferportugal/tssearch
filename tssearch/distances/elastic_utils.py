@@ -6,74 +6,92 @@ from tssearch.distances.lockstep_distances import euclidean_distance  # added to
 
 @njit(parallel=True, fastmath=True)
 def _cost_matrix(x, y):
-    l1 = x.shape[0]
-    l2 = y.shape[0]
-    cum_sum = np.zeros((l1, l2), dtype=np.float32)
+    """
 
-    for i in prange(l1):
-        for j in prange(l2):
-            cum_sum[i, j] = (x[i] - y[j]) ** 2
-
-    return cum_sum
-
-
-@njit(parallel=True, fastmath=True)
-def _multidimensional_cost_matrix(subseq, longseq, weight):
-    """Helper function for fast computation of cost matrix in cost_matrix_diff_vec.
-    Defined outside to prevent recompilation from numba
     Parameters
     ----------
-    subseq: nd-array
-        Short sequence
-    longseq: nd-array
-        Long sequence
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
 
     Returns
     -------
-        Cost matrix
+    c: nd-array
+        The cost matrix.
     """
-    l1 = subseq.shape[0]
-    l2 = longseq.shape[0]
-    l3 = subseq.shape[1]
-    cum_sum = np.zeros((l1, l2), dtype=np.float32)
+    l1 = x.shape[0]
+    l2 = y.shape[0]
+    c = np.zeros((l1, l2), dtype=np.float32)
+
+    for i in prange(l1):
+        for j in prange(l2):
+            c[i, j] = (x[i] - y[j]) ** 2
+
+    return c
+
+
+@njit(parallel=True, fastmath=True)
+def _multidimensional_cost_matrix(x, y, weight):
+    """Helper function for fast computation of cost matrix in cost_matrix_diff_vec.
+    Defined outside to prevent recompilation from numba
+
+    Parameters
+    ----------
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+
+    Returns
+    -------
+    c: nd-array
+        The cost matrix.
+    """
+    l1 = x.shape[0]
+    l2 = y.shape[0]
+    l3 = x.shape[1]
+    c = np.zeros((l1, l2), dtype=np.float32)
 
     for i in prange(l1):
         for j in prange(l2):
             dist = 0.0
             for di in range(l3):
-                diff = subseq[i, di] - longseq[j, di]
+                diff = x[i, di] - y[j, di]
                 dist += weight[i, di] * (diff * diff)
-            cum_sum[i, j] = dist ** 0.5
+            c[i, j] = dist ** 0.5
 
-    return cum_sum
+    return c
 
 
 @njit(nogil=True, fastmath=True)
-def _accumulated_cost_matrix(D):
-    """
-    Fast computation of accumulated cost matrix using cost matrix.
+def _accumulated_cost_matrix(ac):
+    """Fast computation of accumulated cost matrix using cost matrix.
+
     Parameters
     ----------
-    D: nd-array
-        Given cost matrix C, D = acc_initialization(...), D[1:, 1:] = C
+    ac: nd-array
+        Given cost matrix c, ac = acc_initialization(...), ac[1:, 1:] = c.
 
     Returns
     -------
-        Accumulated cost matrix
+        The accumulated cost matrix.
     """
-    for i in range(D.shape[0] - 1):
-        for j in range(D.shape[1] - 1):
-            D[i + 1, j + 1] += min(D[i, j + 1], D[i + 1, j], D[i, j])
-    return D
+    for i in range(ac.shape[0] - 1):
+        for j in range(ac.shape[1] - 1):
+            ac[i + 1, j + 1] += min(ac[i, j + 1], ac[i + 1, j], ac[i, j])
+    return ac
 
 
-def acc_initialization(xl, yl, _type, tolerance=0):
+def acc_initialization(x, y, _type, tolerance=0):
     """Initializes the cost matrix according to the dtw type.
 
     Parameters
     ----------
-    xl: N1*M array
-    yl: N2*M array
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
     _type: string
         Name of dtw type
     tolerance: int
@@ -81,9 +99,10 @@ def acc_initialization(xl, yl, _type, tolerance=0):
 
     Returns
     -------
-
+    ac: nd-array
+        The accumulated cost matrix.
     """
-    ac = np.zeros((xl + 1, yl + 1))
+    ac = np.zeros((x + 1, y + 1))
     if _type == "dtw":
         ac[0, 1:] = np.inf
         ac[1:, 0] = np.inf
@@ -104,10 +123,13 @@ def acc_initialization(xl, yl, _type, tolerance=0):
 
 def cost_matrix(x, y, alpha=1, weight=None):
     """Computes cost matrix using a specified distance (dist) between two time series.
+
+    Parameters
+    ----------
     x: nd-array
-        The reference signal.
+        Time series x (query).
     y: nd-array
-        The estimated signal.
+        Time series y.
     dist: function
         The distance used as a local cost measure. None defaults to the squared euclidean distance
 
@@ -129,8 +151,12 @@ def cost_matrix(x, y, alpha=1, weight=None):
     * *factor* (``Float``) --
       Selects the global constrain factor.
       (default: ``min(xl, yl) * .50``)
-    """
 
+    Returns
+    -------
+    c: nd-array
+        The cost matrix.
+    """
     if weight is None:
         weight = np.ones_like(x)
 
@@ -164,24 +190,27 @@ def cost_matrix(x, y, alpha=1, weight=None):
             C_d = _multidimensional_cost_matrix(_x, _y, weight)
             C_n = _multidimensional_cost_matrix(x, y, weight)
 
-    C = alpha * C_n + (1 - alpha) * C_d
+    c = alpha * C_n + (1 - alpha) * C_d
 
-    return C
+    return c
 
 
-def accumulated_cost_matrix(C, **kwargs):
+def accumulated_cost_matrix(c, **kwargs):
     """
 
     Parameters
     ----------
-    C
-    kwargs
+    c: nd-array
+        The cost matrix.
+
+    \**kwargs:
 
     Returns
     -------
-
+    ac: nd-array
+        The accumulated cost matrix.
     """
-    xl, yl = np.shape(C)
+    xl, yl = np.shape(c)
 
     window = kwargs.get("window", None)
     factor = kwargs.get("factor", np.min((xl, yl)) * 0.50)
@@ -189,24 +218,23 @@ def accumulated_cost_matrix(C, **kwargs):
     tolerance = kwargs.get("tolerance", 0)
 
     if window == "sakoe-chiba":
-        C[np.abs(np.diff(np.indices(C.shape), axis=0))[0] > factor] = np.inf
+        c[np.abs(np.diff(np.indices(c.shape), axis=0))[0] > factor] = np.inf
 
-    D = acc_initialization(xl, yl, dtw_type, tolerance)
-    D[1:, 1:] = C.copy()
-    D = _accumulated_cost_matrix(D)[1:, 1:]
+    ac = acc_initialization(xl, yl, dtw_type, tolerance)
+    ac[1:, 1:] = c.copy()
+    ac = _accumulated_cost_matrix(ac)[1:, 1:]
 
-    return D
+    return ac
 
 
 @njit(nogil=True, fastmath=True)
-def traceback(D):
-    """
-    Computes the traceback path of the matrix D.
+def traceback(ac):
+    """Computes the traceback path of the matrix c.
 
     Parameters
     ----------
-    D: nd-array
-        Matrix
+    ac: nd-array
+        The accumulated cost matrix.
 
     Returns
     -------
@@ -214,13 +242,13 @@ def traceback(D):
 
     """
 
-    i, j = np.array(D.shape) - 2
+    i, j = np.array(ac.shape) - 2
     p, q = [i], [j]
     while (i > 0) and (j > 0):
         tb = 0
-        if D[i, j + 1] < D[i, j]:
+        if ac[i, j + 1] < ac[i, j]:
             tb = 1
-        if D[i + 1, j] < D[i, j + tb]:
+        if ac[i + 1, j] < ac[i, j + tb]:
             tb = 2
         if tb == 0:
             i -= 1
@@ -244,27 +272,26 @@ def traceback(D):
 
 
 @njit(nogil=True, fastmath=True)
-def traceback_adj(D):
-    """
-    Computes the adjusted traceback path of the matrix D.
+def traceback_adj(ac):
+    """Computes the adjusted traceback path of the matrix c.
 
     Parameters
     ----------
-    D: nd-array
-        Matrix
+    ac: nd-array
+        The accumulated cost matrix.
 
     Returns
     -------
         Coordinates p and q of the minimum path adjusted.
 
     """
-    i, j = np.array(D.shape) - 2
+    i, j = np.array(ac.shape) - 2
     p, q = [i], [j]
     while (i > 0) and (j > 0):
         tb = 0
-        if D[i, j + 1] < D[i, j]:
+        if ac[i, j + 1] < ac[i, j]:
             tb = 1
-        if D[i + 1, j] < D[i, j + tb]:
+        if ac[i + 1, j] < ac[i, j + tb]:
             tb = 2
         if tb == 0:
             i -= 1
@@ -282,12 +309,19 @@ def traceback_adj(D):
     return np.array(p), np.array(q)
 
 
-def backtracking(DP):
-    # [ best_path ] = BACKTRACKING ( DP )
-    # Compute the most cost-efficient path
-    # DP := DP matrix of the TWED function
+def backtracking(ac):
+    """Compute the most cost-efficient path.
 
-    x = np.shape(DP)
+    Parameters
+    ----------
+    ac: nd-array
+        The accumulated cost matrix.
+
+    Returns
+    -------
+         Coordinates of the most cost-efficient path.
+    """
+    x = np.shape(ac)
     i = x[0] - 1
     j = x[1] - 1
 
@@ -303,11 +337,11 @@ def backtracking(DP):
         C = np.ones((3, 1)) * np.inf
 
         # Keep data points in both time series
-        C[0] = DP[i - 1, j - 1]
+        C[0] = ac[i - 1, j - 1]
         # Deletion in A
-        C[1] = DP[i - 1, j]
+        C[1] = ac[i - 1, j]
         # Deletion in B
-        C[2] = DP[i, j - 1]
+        C[2] = ac[i, j - 1]
 
         # Find the index for the lowest cost
         idx = np.argmin(C)
@@ -337,13 +371,14 @@ def backtracking(DP):
 # DTW SW
 def dtw_sw(x, y, winlen, alpha=0.5, **kwargs):
     """Computes Dynamic Time Warping (DTW) of two time series using a sliding window.
-    TODO: Check if this needs to be sped up.
+    TODO: Check if this needs to be speed up.
+
     Parameters
     ----------
     x: nd-array
-        The reference signal.
-    y: (nd-array
-        The estimated signal.
+        Time series x (query).
+    y: nd-array
+        Time series y.
     winlen: int
         The sliding window length
     alpha: float
@@ -372,14 +407,14 @@ def dtw_sw(x, y, winlen, alpha=0.5, **kwargs):
 
     Returns
     -------
-           d: float
-            The SW-DTW distance.
-           C: nd-array
-            The local cost matrix.
-           ac: nd-array
-            The accumulated cost matrix.
-           path nd-array
-            The optimal warping path between the two sequences.
+    d: float
+        The SW-DTW distance.
+    c: nd-array
+        The local cost matrix.
+    ac: nd-array
+        The accumulated cost matrix.
+    path: nd-array
+        The optimal warping path between the two sequences.
 
     """
     xl, yl = len(x), len(y)
@@ -469,20 +504,22 @@ def dtw_sw(x, y, winlen, alpha=0.5, **kwargs):
 
 
 def sliding_dist(xw, yw, dxw, dyw, alpha, win):
-    """
-    Computes the sliding distance
+    """Computes the sliding distance.
+
+    Parameters
+    ----------
     xw: nd-array
-        x coords window
+        x coords window.
     yw: nd-array
-        y coords window
+        y coords window.
     dxw: nd-array
-        x coords diff window
+        x coords diff window.
     dyw: nd-array
-        y coords diff window
+        y coords diff window.
     alpha: float
-        Rely more on absolute or difference values 1- abs, 0 - diff
+        Rely more on absolute or difference values 1- abs, 0 - diff.
     win: nd-array
-        Signal window used for sliding distance
+        Signal window used for sliding distance.
 
     Returns
     -------
@@ -513,64 +550,76 @@ def get_mirror(s, ws):
 
 @njit()
 def _lcss_point_dist(x, y):
+    """
+
+    Parameters
+    ----------
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+
+    Returns
+    -------
+        The LCSS distance.
+    """
     dist = 0.
     for di in range(x.shape[0]):
         diff = (x[di] - y[di])
         dist += diff * diff
-    dist = dist ** 0.5
-    return dist
+
+    return dist ** 0.5
 
 
 def lcss_accumulated_matrix(x, y, eps):
-    """Computes the LCSS similarity matrix using the euclidean distance (dist) between two time series.
+    """Computes the LCSS cost matrix using the euclidean distance (dist) between two time series.
 
     Parameters
     ----------
     x: nd-array
-            The reference signal.
+        Time series x (query).
     y: nd-array
-            The estimated signal.
+        Time series y.
     eps : float
-            Amplitude matching threshold.
+        Amplitude matching threshold.
 
     Returns
     -------
-    sim_mat : float
-            Similarity matrix between both time series.
+    ac : nd-array
+            The accumulated cost matrix.
     """
 
     xl, yl = len(x), len(y)
 
-    sim_mat = np.zeros((xl + 1, yl + 1))
+    ac = np.zeros((xl + 1, yl + 1))
 
     for i in range(1, xl + 1):
         for j in range(1, yl + 1):
             if _lcss_point_dist(x[i - 1, :], y[j - 1, :]) <= eps:
-                sim_mat[i, j] = 1 + sim_mat[i - 1, j - 1]
+                ac[i, j] = 1 + ac[i - 1, j - 1]
             else:
-                sim_mat[i, j] = max(sim_mat[i, j - 1], sim_mat[i - 1, j])
+                ac[i, j] = max(ac[i, j - 1], ac[i - 1, j])
 
-    return sim_mat
+    return ac
 
 
-def lcss_path(x, y, sim_mat, eps):
-    """Computes the LCSS matching path between two time series.
+def lcss_path(x, y, c, eps):
+    """Computes the LCSS path between two time series.
 
     Parameters
     ----------
     x: nd-array
-            The reference signal.
+        The reference signal.
     y: nd-array
-            The estimated signal.
-    sim_mat : float
-            Similarity matrix between both time series.
+        The estimated signal.
+    c : nd-array
+        The cost matrix.
     eps : float
-            Matching threshold.
+        Matching threshold.
 
     Returns
     -------
-    lcss_path : float
-        LCSS matching path.
+        Coordinates of the minimum LCSS path.
     """
     i, j = len(x), len(y)
     path = []
@@ -580,7 +629,7 @@ def lcss_path(x, y, sim_mat, eps):
             path.append((i - 1, j - 1))
             i -= 1
             j -= 1
-        elif sim_mat[i - 1, j] > sim_mat[i, j - 1]:
+        elif c[i - 1, j] > c[i, j - 1]:
             i -= 1
         else:
             j -= 1
@@ -589,21 +638,20 @@ def lcss_path(x, y, sim_mat, eps):
     return path[1:, 0], path[1:, 1]
 
 
-def lcss_score(sim_mat):
+def lcss_score(c):
     """Computes the LCSS similarity score between two time series.
 
     Parameters
     ----------
-    sim_mat : float
-            Similarity matrix between both time series.
+    c : nd-array
+        The cost matrix.
 
     Returns
     -------
-    lcss : float
-        LCSS score.
+        The LCSS score.
     """
 
-    xl = sim_mat.shape[0] - 1
-    yl = sim_mat.shape[1] - 1
+    xl = c.shape[0] - 1
+    yl = c.shape[1] - 1
 
-    return float(sim_mat[-1, -1]) / min([xl, yl])
+    return float(c[-1, -1]) / min([xl, yl])
