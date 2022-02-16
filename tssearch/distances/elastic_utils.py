@@ -563,9 +563,9 @@ def _lcss_point_dist(x, y):
     -------
         The LCSS distance.
     """
-    dist = 0.
+    dist = 0.0
     for di in range(x.shape[0]):
-        diff = (x[di] - y[di])
+        diff = x[di] - y[di]
         dist += diff * diff
 
     return dist ** 0.5

@@ -25,7 +25,7 @@ def time_series_search(dict_distances, query, sequence, tq=None, ts=None, weight
                 elif d_type == "elastic":
                     distance, ac = elastic_search(dict_distances[d_type][dist], query, sequence, tq, ts, weight)
 
-                    if dist == 'Longest Common Subsequence':
+                    if dist == "Longest Common Subsequence":
                         eps = dict_distances[d_type][dist]["parameters"]["eps"]
                         if len(np.shape(query)) == 1:
                             query_copy = query.reshape(-1, 1)

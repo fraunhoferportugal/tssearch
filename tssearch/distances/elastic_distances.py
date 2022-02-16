@@ -237,10 +237,10 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
 
     if report == "cost_matrix":
         return ac
-    elif report == 'search':
+    elif report == "search":
         d = ac[n - 1, :]
         return d, ac
-    elif report == 'path':
+    elif report == "path":
         path = backtracking(ac)
         return path
     else:  # report = 'search'
