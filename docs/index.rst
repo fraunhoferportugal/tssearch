@@ -22,6 +22,7 @@ In development
 
    Lockstep Distances <descriptions/lockstep_distances>
    Elastic Distances <descriptions/elastic_distances>
+   Module Reference <descriptions/modules>
    Authors <authors>
    Changelog <changelog>
    License <license>
@@ -29,7 +30,11 @@ In development
 Installation
 ============
 
-We’re planning to add TSSEARCH to PyPi soon. In the meantime, you can install TSSEARCH by cloning the GitHub repository and running the setup.py.
+This packages is available on PyPI:
+
+.. code:: bash
+
+    $ pip install tssearch
 
 Get started
 ===========

@@ -15,12 +15,12 @@ Lead Development Team
 - Duarte Folgado (`duarte.folgado@fraunhofer.pt <duarte.folgado@fraunhofer.pt>`_)
 - Hugo Gamboa (`hugo.gamboa@fraunhofer.pt <hugo.gamboa@fraunhofer.pt>`_)
 - Marília Barandas  (`marilia.barandas@fraunhofer.pt <marilia.barandas@fraunhofer.pt>`_)
+- Maria Lua Nunes (`maria.nunes@fraunhofer.pt <maria.nunes@fraunhofer.pt>`_)
+- Margarida Antunes (`maria.antunes@fraunhofer.pt <maria.antunes@fraunhofer.pt>`_)
 
 
 Contributors
 ------------
 - Hui Liu
-- Maria Lua Nunes
-- Margarida Antunes
 - Tanja Schultz
 - Yale Hartmann
