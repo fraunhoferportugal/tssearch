@@ -22,6 +22,7 @@ In development
 
    Lockstep Distances <descriptions/lockstep_distances>
    Elastic Distances <descriptions/elastic_distances>
+   Segmentation and Search <descriptions/segmentation_search>
    Module Reference <descriptions/modules>
    Authors <authors>
    Changelog <changelog>

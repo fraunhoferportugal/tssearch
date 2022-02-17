@@ -1,4 +1,5 @@
 [![license](https://img.shields.io/badge/License-BSD%203-brightgreen)](https://github.com/fraunhoferportugal/tssearch/blob/master/LICENSE.txt)
+[![Documentation Status](https://readthedocs.org/projects/tssearch/badge/?version=latest)](https://tssearch.readthedocs.io/en/latest/?badge=latest)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tssearch)
 ![PyPI](https://img.shields.io/pypi/v/tssearch)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -19,6 +20,15 @@ segmentation and query search
 * **Easily extended**: adding new distances is easy, and we encourage you to contribute with your custom distances or search methods
 
 ## Get started
+
+### Installation
+TSSEARCH is available at PyPI:
+
+```python
+pip install tssearch
+```
+
+### Example
 The code below segments a 10 s electrocardiography record:
 
 ```python
@@ -33,6 +43,9 @@ cfg = tssearch.get_distance_dict(["Dynamic Time Warping"])
 # Performs the segmentation
 out = tssearch.time_series_segment(cfg, query, sequence, weights)
 ```
+
+### Documentation
+The documentation is available [here](https://tssearch.readthedocs.io/en/latest/)
 
 ## Available distances
 
