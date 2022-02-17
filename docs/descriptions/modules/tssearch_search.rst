@@ -1,4 +1,4 @@
-search
+Search
 ======
 
 .. automodule:: tssearch.search
@@ -18,6 +18,14 @@ segmentation
 ------------
 
 .. automodule:: tssearch.search.segmentation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+utils
+-----
+
+.. automodule:: tssearch.search.search_utils
     :members:
     :undoc-members:
     :show-inheritance:

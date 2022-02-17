@@ -9,3 +9,4 @@ Module Reference
 .. toctree::
 
     modules/tssearch_search
+    modules/tssearch_distances
