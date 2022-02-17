@@ -56,7 +56,7 @@
       "function": "minkowski_distance",
       "parameters":
             {"p":  3},
-      "use": "no"
+      "use": "yes"
     },
     "Manhattan Distance": {
       "multivariate": "yes",
@@ -77,21 +77,21 @@
       "description": "",
       "function": "correlation_distance",
       "parameters": "",
-      "use": "no"
+      "use": "yes"
     },
     "Pearson Correlation Distance": {
       "multivariate": "no",
       "description": "",
       "function": "pearson_correlation",
       "parameters": "",
-      "use": "no"
+      "use": "yes"
     },
     "Short Time Series Distance": {
       "multivariate": "no",
       "description": "",
       "function": "short_time_series_distance",
       "parameters": "",
-      "use": "no"
+      "use": "yes"
     }
   }
 }

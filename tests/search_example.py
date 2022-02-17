@@ -11,7 +11,7 @@ if __name__ == "__main__":
     tq = t[:70]
     query = np.sin(tq)
 
-    dict_distances = load_json("distances_search.json")
+    dict_distances = get_distances_by_type()
 
     result = time_series_search(dict_distances, query, sequence, tq, t, output=("number", 1))
 
