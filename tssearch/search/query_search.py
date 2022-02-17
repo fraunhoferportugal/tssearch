@@ -4,6 +4,32 @@ from tssearch.search.search_utils import lockstep_search, elastic_search, start_
 
 
 def time_series_search(dict_distances, query, sequence, tq=None, ts=None, weight=None, output=("number", 1)):
+    """
+    Time series search method locates the k-best occurrences of a given query on a more extended sequence based on a
+    distance measurement.
+
+    Parameters
+    ----------
+    dict_distances: dict
+        Configuration file with distances
+    query: nd-array
+        Time series query
+    sequence: nd-array
+        Time series sequence
+    tq: nd-array (Default: None)
+        Time instants of time series query
+    ts: nd-array (Default: None)
+        Time instants of time series sequence
+    weight: nd-array (Default: None)
+        query weight values
+    output: tuple
+        number of occurrences
+
+    Returns
+    -------
+    distance_results: dict
+        time instants, optimal alignment path and distance for each occurrence per distance
+    """
 
     l_query = len(query)
     distance_results = {}

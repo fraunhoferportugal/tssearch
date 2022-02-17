@@ -3,6 +3,29 @@ from tssearch.search.search_utils import lockstep_search, elastic_search
 
 
 def time_series_segmentation(dict_distances, query, sequence, tq=None, ts=None, weight=None):
+    """
+    Time series segmentation locates the time instants between consecutive query repetitions on a more extended and
+    repetitive sequence.
+
+    Parameters
+    ----------
+    dict_distances: dict
+        Configuration file with distances
+    query: nd-array
+        Time series query
+    sequence: nd-array
+        Time series sequence
+    tq: nd-array (Default: None)
+        Time instants of time series query
+    ts: nd-array (Default: None)
+        Time instants of time series sequence
+    weight: nd-array (Default: None)
+        query weight values
+    Returns
+    -------
+    segment_results: dict
+        Segmented time instants for each given distances
+    """
 
     l_query = len(query)
     segment_results = {}

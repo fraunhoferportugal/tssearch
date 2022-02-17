@@ -1,5 +1,8 @@
 [![license](https://img.shields.io/badge/License-BSD%203-brightgreen)](https://github.com/fraunhoferportugal/tssearch/blob/master/LICENSE.txt)
-![py3 status](https://img.shields.io/badge/python3-supported-green.svg)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tssearch)
+![PyPI](https://img.shields.io/pypi/v/tssearch)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fraunhoferportugal/tssearch/blob/master/notebooks/Query_search_unidimensional.ipynb)
 
 # Time Series Subsequence Search Library
 

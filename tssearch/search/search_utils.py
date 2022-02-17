@@ -2,29 +2,42 @@ import numpy as np
 from scipy.signal import find_peaks
 
 
-def elastic_search(distance, query, sequence, tq=None, ts=None, weight=None):
+def elastic_search(dict_distances, query, sequence, tq=None, ts=None, weight=None):
     """
+    Query search for elastic measures
 
     Parameters
     ----------
-    sequence
-    query
-    distance
+    dict_distances: dict
+        Configuration file with distances
+    query: nd-array
+        Time series query
+    sequence: nd-array
+        Time series sequence
+    tq: nd-array (Default: None)
+        Time instants of time series query
+    ts: nd-array (Default: None)
+        Time instants of time series sequence
+    weight: nd-array (Default: None)
+        query weight values
 
     Returns
     -------
-
+    distance: nd-array
+        distance value between query and sequence
+    ac: nd-array
+        accumulated cost matrix
     """
 
     exec("from tssearch import *")
 
     # distance function
-    func_total = distance["function"]
+    func_total = dict_distances["function"]
 
     # Check for parameters
     parameters_total = {}
-    if distance["parameters"] != "":
-        parameters_total = distance["parameters"]
+    if dict_distances["parameters"] != "":
+        parameters_total = dict_distances["parameters"]
     parameters_total["report"] = "search"
 
     if "dtw_type" in parameters_total:
@@ -34,30 +47,43 @@ def elastic_search(distance, query, sequence, tq=None, ts=None, weight=None):
     if "time" in parameters_total:
         parameters_total_copy = parameters_total.copy()
         del parameters_total_copy["time"]
-        distance, ac = locals()[func_total](query, sequence, tq, ts, **parameters_total_copy)
+        distances, ac = locals()[func_total](query, sequence, tq, ts, **parameters_total_copy)
     else:
-        distance, ac = locals()[func_total](query, sequence, **parameters_total)
+        distances, ac = locals()[func_total](query, sequence, **parameters_total)
 
-    return distance, ac
+    return distances, ac
 
 
-def lockstep_search(distance, query, sequence, weight):
+def lockstep_search(dict_distances, query, sequence, weight):
     """
-    :param ts1: (Array) Time series one
-    :param ts2: (Array) Time series two
-    :param dict_distances: Dictionary of distances
-    :return: distances between time series
+    Query search for lockstep measures
+
+    Parameters
+    ----------
+    dict_distances: dict
+        Configuration file with distances
+    query: nd-array
+        Time series query
+    sequence: nd-array
+        Time series sequence
+    weight: nd-array (Default: None)
+        query weight values
+
+    Returns
+    -------
+    res: nd-array
+        distance value between query and sequence
     """
 
     exec("from tssearch import *")
 
     # distance function
-    func_total = distance["function"]
+    func_total = dict_distances["function"]
 
     # Check for parameters
     parameters_total = {}
-    if distance["parameters"] != "":
-        parameters_total = distance["parameters"]
+    if dict_distances["parameters"] != "":
+        parameters_total = dict_distances["parameters"]
 
     lw = len(query)
     res = np.zeros(len(sequence) - lw, "d")
@@ -71,11 +97,28 @@ def lockstep_search(distance, query, sequence, weight):
     return res
 
 
-def start_sequences_index(res, output=("number", 1), overlap=1.0):
+def start_sequences_index(distance, output=("number", 1), overlap=1.0):
+    """
+    Method to retrieve the k-best occurrences from a given vector distance
+
+    Parameters
+    ----------
+    distance: nd-array
+        distance values
+    output: tuple
+        number of occurrences
+    overlap: float
+        minimum distance between occurrences
+
+    Returns
+    -------
+    id_s: nd-array
+        indexes of k-best occurrences
+    """
 
     # pks - min
-    pks, _ = find_peaks(-res, distance=overlap)  # TODO if necessary add first and last sequence
-    pks_val = res[pks]
+    pks, _ = find_peaks(-distance, distance=overlap)  # TODO if necessary add first and last sequence
+    pks_val = distance[pks]
 
     if output[0] == "number":
         num_events = output[1]
@@ -83,7 +126,7 @@ def start_sequences_index(res, output=("number", 1), overlap=1.0):
         id_s = pks[pks_val_sort[:num_events]]
     elif output[0] == "percentile":
         perct = output[1]
-        perct_val = np.percentile(res, 100 - perct)
+        perct_val = np.percentile(distance, 100 - perct)
         pks_perct = np.where(pks_val < perct_val)[0]
         id_s = pks[pks_perct]
     elif output[0] == "threshold":
