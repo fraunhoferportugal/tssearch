@@ -8,7 +8,42 @@ Distance measures that perform a non-linear mapping to align the time series and
 Dynamic Time Warping (DTW)
 **************************
 
-DTW Description
+The DTW algorithm computes the stretch of the time axis which optimally maps between two time series. It measures the remaining cumulative distance after the alignment and the pairwise correspondence between each sample.
+
+.. code:: python
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from tssearch.search.query_search import time_series_search
+    from tssearch.utils.visualisation import plot_alignment
+
+    # generates signals
+    freq = 2
+    amp = 2
+    time = np.linspace(0, 2, 100)
+    ts1 = np.concatenate([amp * np.sin(np.pi * time), np.zeros(100), amp * np.sin(np.pi * time), np.zeros(10)])
+    ts2 = np.concatenate([np.zeros(10), amp * np.sin(np.pi * time), np.zeros(150), amp * np.sin(np.pi * time), np.zeros(5)])
+
+    dict_distances = {
+        "elastic": {"Dynamic Time Warping": {
+            "multivariate": "yes",
+            "description": "",
+            "function": "dtw",
+            "parameters": {"dtw_type": "dtw", "alpha": 1},
+            "use": "yes"}
+        }
+    }
+
+    result = time_series_search(dict_distances, ts1, ts2, output=("number", 1))
+
+    plt.figure()
+    plt.title("Dynamic Time Warping")
+    plot_alignment(ts1, ts2, result["Dynamic Time Warping"]["path"][0])
+    plt.legend(fontsize=17, loc="lower right")
+
+
+.. image:: https://i.postimg.cc/sgQKCBfj/dtw-search.png
+   :alt: An example of DTW.
 
 *********************************
 Longest Common Subsequence (LCSS)
@@ -20,29 +55,36 @@ In the example below, we compute the LCSS alignment between two time series, one
 
 .. code:: python
 
-    import tssearch
     import numpy as np
+    import matplotlib.pyplot as plt
+    from tssearch.search.query_search import time_series_search
+    from tssearch.utils.visualisation import plot_alignment
 
-    s1 = np.sin(np.arange(0, 4*np.pi, 0.1))
-    noise = np.random.normal(0, 0.1, s1.shape)
-    s2 = 1 + np.sin(np.arange(0, 4*np.pi, 0.1) + 2) + noise
+    ts1 = np.sin(np.arange(0, 4*np.pi, 0.1))
+    noise = np.random.normal(0, 0.1, ts1.shape)
+    ts2 = 1 + np.sin(np.arange(0, 4*np.pi, 0.1) + 2) + noise
 
-    s1 = s1.reshape(-1, 1)
-    s2 = s2.reshape(-1, 1)
-    ac = tssearch.lcss_accumulated_matrix(x=s1, y=s2, eps=1.5)
-    lcss_path = tssearch.lcss_path(x=s1, y=s2, ac, eps=1.5)
+    ts1 = ts1.reshape(-1, 1)
+    ts2 = ts2.reshape(-1, 1)
 
-    plt.plot(s1, "b-", label='First time series')
-    plt.plot(s2, "g-", label='Second time series')
-    x=lcss_path[0]
-    y=lcss_path[1]
-    for i, j in zip(x,y):
-        plt.plot([i, j], [s1[i], s2[j]], color='orange')
-    plt.legend()
-    plt.title("Time series matching with LCSS")
+    dict_distances = {
+        "elastic": {"Longest Common Subsequence": {
+            "multivariate": "yes",
+            "description": "",
+            "function": "lcss",
+            "parameters": {"eps": 1, "report": "distance"},
+            "use": "yes"}
+        }
+    }
+
+    result = time_series_search(dict_distances, ts1, ts2, output=("number", 1))
+
+    plt.figure()
+    plt.title("Longest Common Subsequence")
+    plot_alignment(ts1, ts2, result["Longest Common Subsequence"]["path"][0])
 
 
-.. image:: https://i.postimg.cc/28XbZ9k8/lcss.png
+.. image:: https://i.postimg.cc/43Rx3ZBV/lcss-search.png
    :alt: An example of LCSS.
 
 
@@ -54,10 +96,60 @@ Time warp edit distance (TWED) uses sequences’ samples indexes/timestamps diff
 
 TWED has been used in time series classification assessing classification performance while varying TWED input parameters [2]_, [3]_. In the example, we calculate TWED between two time series varying its parameters.
 
-.. image:: https://i.postimg.cc/26WZhNcQ/data.png
+.. code:: python
+
+    import numpy as np
+    import pandas as pd
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    from tssearch.distances.compute_distance import time_series_distance
+
+    # generates signals
+    freq = 2
+    amp = 2
+    time = np.linspace(0, 2, 1000)
+    ts1 = amp * np.sin(2 * np.pi * freq * time)
+    ts2 = amp * np.sin(6 * np.pi * freq * time)[::50]
+
+    # visualize original and downsampled sequence
+    plt.figure()
+    plt.plot(time, ts1, color=sns.color_palette("Greens")[2], label="Time series 1", lw=3.)
+    plt.plot(time[::50], ts2, color=sns.color_palette("Greens")[5], label="Time series 2",  lw=3.)
+    plt.ylabel('Space')
+    plt.xlabel('Time')
+    plt.legend(fontsize=17, loc="lower right")
+
+    stiffness = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
+    penalty = [0, .25, .5, .75, 1.0]
+
+    distance = list()
+    for s in stiffness:
+        for p in penalty:
+            # calculate distances
+            dict_distances = {
+                    "elastic": {"Time Warp Edit Distance": {"multivariate": "no",
+                                                            "description": "",
+                                                            "function": "twed",
+                                                            "parameters": {"nu": s, "lmbda": p, "p": 2, "time": "true"},
+                                                            "use": "yes"}}}
+
+            distance.append({'stiffness': s,
+                             'penalty': p,
+                             'distance': time_series_distance(dict_distances,
+                                                              ts1, ts2,
+                                                              time, time[::50]).values[0][0]})
+
+    df = pd.DataFrame(distance)
+    df_pivot = df.pivot("stiffness", "penalty", "distance")
+
+    plt.figure()
+    sns.heatmap(df_pivot, annot=True, cbar_kws={'label': "TWED"}, cmap="viridis")
+
+
+.. image:: https://i.postimg.cc/tJp6nWkd/twed-time-series-originals.png
   :alt: Two example series
 
-.. image:: https://i.postimg.cc/rsQFthkG/twed.png
+.. image:: https://i.postimg.cc/bryGw8Y3/twed-heatmap.png
   :alt: Resulting TWED distances
 
 
