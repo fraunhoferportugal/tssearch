@@ -1,5 +1,3 @@
-import numpy as np
-import pandas as pd
 from tssearch import *
 
 import matplotlib.pyplot as plt
@@ -39,7 +37,8 @@ if __name__ == "__main__":
     plt.figure(2)
     plot_alignment(query[:, 1], sequence[:, 1], path, hoffset=path[1][0])
 
-    # 3. 3-axis, reference, sdtw, different axes weights#derivate and abs with different weight fw = [.7,.7,.7,.3,.3,.3]
+    # 3. 3-axis, reference, sdtw, different axes weights
+    # derivate and abs with different weight fw = [.7,.7,.7,.3,.3,.3]
     sequence = np.array([np.sin(t), np.sin(2 * t), np.cos(t)]).T
     query = np.array([np.sin(t[:70]), np.sin(2 * t[10:80]), np.cos(t[30:100])]).T
     weight = np.ones_like(query)
@@ -47,14 +46,7 @@ if __name__ == "__main__":
     weight[:, 1] = 0.8
 
     dict_distances = {
-        "elastic": {
-            "Dynamic Time Warping": {
-                "function": "dtw",
-                "parameters": {"dtw_type": "sub-dtw"},
-                "use": "yes",
-                "type": "elastic",
-            }
-        }
+        "elastic": {"Dynamic Time Warping": {"function": "dtw", "parameters": {"dtw_type": "sub-dtw"}, "use": "yes"}}
     }
 
     result3 = time_series_search(dict_distances, query, sequence, weight=weight, output=("number", 1))

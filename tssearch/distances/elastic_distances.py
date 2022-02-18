@@ -132,7 +132,7 @@ def lcss(x, y, eps=1, **kwargs):
         return sim_score
 
 
-def dlp(x, y, degree=2):
+def dlp(x, y, p=2):
     """Computes Lp norm distance between two time series.
 
     Parameters
@@ -141,19 +141,19 @@ def dlp(x, y, degree=2):
         Time series x (query).
     y: nd-array
         Time series y.
-    degree: int
+    p: int
         Lp norm distance degree for local cost computation.
 
     Returns
     -------
-        The LP distance.
+        The Lp distance.
     """
 
-    cost = np.sum(np.power(np.abs(x - y), degree))
-    return np.power(cost, 1 / degree)
+    cost = np.sum(np.power(np.abs(x - y), p))
+    return np.power(cost, 1 / p)
 
 
-def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
+def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, p=2, report="distance"):
     """Computes Time Warp Edit Distance (TWED) of two time series.
 
     Reference :
@@ -177,7 +177,7 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
             nu > 0, TWED distance measure on amplitude x time.
     lmbda: int
         Penalty for deletion operation (lmbda >= 0).
-    degree: int
+    p: int
         Lp norm distance degree for local cost computation.
     report: str
         distance, cost matrix, path.
@@ -223,14 +223,14 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, degree=2, report="distance"):
             # Calculate and save cost of various operations
             C = np.ones((3, 1)) * np.inf
             # Deletion in A
-            C[0] = ac[i - 1, j] + dlp(query[i - 1], query[i], degree) + nu * (tq[i] - tq[i - 1]) + lmbda
+            C[0] = ac[i - 1, j] + dlp(query[i - 1], query[i], p) + nu * (tq[i] - tq[i - 1]) + lmbda
             # Deletion in B
-            C[1] = ac[i, j - 1] + dlp(sequence[j - 1], sequence[j], degree) + nu * (ts[j] - ts[j - 1]) + lmbda
+            C[1] = ac[i, j - 1] + dlp(sequence[j - 1], sequence[j], p) + nu * (ts[j] - ts[j - 1]) + lmbda
             # Keep data points in both time series
             C[2] = (
                 ac[i - 1, j - 1]
                 + dlp(query[i], sequence[j], degree)
-                + dlp(query[i - 1], sequence[j - 1], degree)
+                + dlp(query[i - 1], sequence[j - 1], p)
                 + nu * (abs(tq[i] - ts[j]) + abs(tq[i - 1] - ts[j - 1]))
             )
             # Choose the operation with the minimal cost and update c Matrix

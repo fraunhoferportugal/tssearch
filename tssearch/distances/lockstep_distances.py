@@ -13,14 +13,16 @@ def euclidean_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Euclidean distance value
+        Euclidean distance value.
 
     """
     p = 2
@@ -47,14 +49,18 @@ def minkowski_distance(x, y, weight=None, p=3):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
+    p: int
+        Lp norm distance degree.
 
     Returns
     -------
     float
-        Minkowski distance value
+        Minkowski distance value.
 
     """
     if len(x) != len(y):
@@ -82,14 +88,16 @@ def manhattan_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Manhattan distance value
+        Manhattan distance value.
 
     """
     p = 1
@@ -117,14 +125,16 @@ def chebyshev_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Chebyshev distance value
+        Chebyshev distance value.
 
     """
     p = np.inf
@@ -151,14 +161,16 @@ def correlation_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Correlation distance value
+        Correlation distance value.
 
     """
     if len(x) != len(y):
@@ -177,14 +189,16 @@ def pearson_correlation(x, y, beta=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    beta: float
+        Beta coefficient.
 
     Returns
     -------
     float
-        Pearson correlation value
+        Pearson correlation value.
 
     """
     if len(x) != len(y):
@@ -207,18 +221,18 @@ def short_time_series_distance(x, y, tx=None, ty=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
     tx : nd-array
-        Sampling index of time series x
+        Sampling index of time series x.
     ty : nd-array
-        Sampling index of time series y
+        Sampling index of time series y.
 
     Returns
     -------
     float
-        Short time series distance value
+        Short time series distance value.
 
     """
     if len(x) != len(y):
@@ -242,14 +256,16 @@ def braycurtis_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Braycurtis distance value
+        Braycurtis distance value.
 
     """
     if len(x) != len(y):
@@ -268,14 +284,16 @@ def canberra_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Canberra distance value
+        Canberra distance value.
 
     """
     if len(x) != len(y):
@@ -294,14 +312,16 @@ def cosine_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Cosine distance value
+        Cosine distance value.
 
     """
     if len(x) != len(y):
@@ -320,14 +340,16 @@ def mahalanobis_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Mahalanobis distance value
+        Mahalanobis distance value.
 
     """
     if len(x) != len(y):
@@ -346,14 +368,16 @@ def sqeuclidean_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Squared Euclidean distance value
+        Squared Euclidean distance value.
 
     """
     if len(x) != len(y):
@@ -372,14 +396,16 @@ def hamming_distance(x, y, weight=None):
     Parameters
     ----------
     x : nd-array
-        Time series x
+        Time series x.
     y : nd-array
-        Time series y
+        Time series y.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
     float
-        Hamming distance value
+        Hamming distance value.
 
     """
     if len(x) != len(y):

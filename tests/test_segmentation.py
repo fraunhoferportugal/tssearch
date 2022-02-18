@@ -6,9 +6,7 @@ from tssearch import load_ecg_example, get_distance_dict, time_series_segmentati
 def segmentation():
     data = load_ecg_example()
     cfg = get_distance_dict(["Dynamic Time Warping", "Euclidean Distance"])
-    out = time_series_segmentation(
-        cfg, data["query"], data["sequence"], tq=data["tq"], ts=data["ts"], weight=data["weight"]
-    )
+    out = time_series_segmentation(cfg, data["query"], data["sequence"], data["tq"], data["ts"], weight=data["weight"])
 
     np.testing.assert_almost_equal(
         out["Dynamic Time Warping"], [7, 51, 120, 161, 210, 263, 318, 394, 444, 510, 584, 666, 740, 804, 878]

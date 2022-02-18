@@ -1,5 +1,5 @@
 import numpy as np
-from tssearch.distances.elastic_utils import traceback_adj, backtracking, lcss_path, lcss_score
+from tssearch.distances.elastic_utils import traceback_adj, lcss_path, lcss_score
 from tssearch.search.search_utils import lockstep_search, elastic_search, start_sequences_index
 
 
@@ -11,24 +11,24 @@ def time_series_search(dict_distances, query, sequence, tq=None, ts=None, weight
     Parameters
     ----------
     dict_distances: dict
-        Configuration file with distances
+        Configuration file with distances.
     query: nd-array
-        Time series query
+        Query time series.
     sequence: nd-array
-        Time series sequence
-    tq: nd-array (Default: None)
-        Time instants of time series query
-    ts: nd-array (Default: None)
-        Time instants of time series sequence
+        Sequence time series.
+    tq: nd-array
+        Time stamp time series query.
+    ts: nd-array
+        Time stamp time series sequence.
     weight: nd-array (Default: None)
-        query weight values
+        query weight values.
     output: tuple
-        number of occurrences
+        number of occurrences.
 
     Returns
     -------
     distance_results: dict
-        time instants, optimal alignment path and distance for each occurrence per distance
+        time instants, optimal alignment path and distance for each occurrence per distance.
     """
 
     l_query = len(query)

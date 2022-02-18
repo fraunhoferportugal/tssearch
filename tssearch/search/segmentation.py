@@ -12,13 +12,13 @@ def time_series_segmentation(dict_distances, query, sequence, tq=None, ts=None, 
     dict_distances: dict
         Configuration file with distances
     query: nd-array
-        Time series query
+        Query time series.
     sequence: nd-array
-        Time series sequence
-    tq: nd-array (Default: None)
-        Time instants of time series query
-    ts: nd-array (Default: None)
-        Time instants of time series sequence
+        Sequence time series.
+    tq: nd-array
+        Time stamp time series query.
+    ts: nd-array
+        Time stamp time series sequence.
     weight: nd-array (Default: None)
         query weight values
     Returns

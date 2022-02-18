@@ -4,7 +4,7 @@ from tssearch.distances.elastic_distances import dtw
 from tssearch.distances.elastic_utils import traceback
 
 
-def tam(ts1, ts2):
+def tam(x, y):
     """Calculates the Time Alignment Measurement (TAM) based on an optimal warping path
     between two time series.
 
@@ -12,21 +12,20 @@ def tam(ts1, ts2):
 
     Parameters
     ----------
-    path: nd-array
-        A nested array containing the optimal warping path between the
-        two sequences.
-    report: string
-        A string containing the report mode parameter.
+    x : nd-array
+        Time series x.
+    y : nd-array
+        Time series y.
 
     Returns
     -------
     In case ``report=instants`` the number of indexes in advance, delay and phase
     will be returned.
-    For ``report=ratios``, the ratio of advance, delay and phase
+    For ``report=ratios``, the ratio of advance, delay and phase.
     will be returned. In case ``report=distance``, only the TAM will be returned.
 
     """
-    ac = dtw(ts1, ts2, report="cost_matrix")
+    ac = dtw(x, y, report="cost_matrix")
 
     path = traceback(ac)
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-from tssearch import load_ecg_example, get_distance_dict, time_series_search, get_distances_by_type
+from tssearch import load_ecg_example, get_distance_dict, time_series_search
 
 
 def query_search():
