@@ -52,6 +52,7 @@ def dtw(x, y, weight=None, **kwargs):
     path: nd-array
         The optimal warping path between the two sequences.
     """
+
     xl, yl = len(x), len(y)
 
     alpha = kwargs.get("alpha", 1)

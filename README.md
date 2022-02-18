@@ -34,18 +34,18 @@ The code below segments a 10 s electrocardiography record:
 ```python
 import tssearch
 
-# Load the query, (optional) weight vector and sequence  
-query, weights, sequence = tssearch.examples.get_ecg_example_data()
+# Load the query, (optional) weight vector and sequence
+data = tssearch.load_ecg_example()
 
 # Selects the Dynamic Time Warping (DTW) as the distance for the segmentation
 cfg = tssearch.get_distance_dict(["Dynamic Time Warping"])
 
 # Performs the segmentation
-out = tssearch.time_series_segment(cfg, query, sequence, weights)
+out = tssearch.time_series_segmentation(cfg, data['query'], data['sequence'], data['weight'])
 ```
 
 ### Documentation
-The documentation is available [here](https://tssearch.readthedocs.io/en/latest/)
+The documentation is available [here](https://tssearch.readthedocs.io/en/latest/).
 
 ## Available distances
 
