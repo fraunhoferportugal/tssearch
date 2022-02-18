@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     download_url="https://github.com/fraunhoferportugal/tssearch/archive/refs/tags/v0.1.0.tar.gz",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages("tssearch"),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
