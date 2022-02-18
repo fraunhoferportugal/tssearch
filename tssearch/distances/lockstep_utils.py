@@ -4,7 +4,23 @@ from numba import njit, prange, double
 
 @njit(parallel=True, fastmath=True)
 def _lnorm_multidimensional(x, y, weight, p=2):
+    """
 
+    Parameters
+    ----------
+    x : nd-array
+        Time series x.
+    y : nd-array
+        Time series y.
+    weight: nd-array
+        Axes weight.
+    p: int
+        Lp norm distance degree.
+
+    Returns
+    -------
+        The Lp norm distance.
+    """
     l1 = x.shape[0]
     l3 = x.shape[1]
 
@@ -20,7 +36,23 @@ def _lnorm_multidimensional(x, y, weight, p=2):
 
 
 def _lnorm_unidimensional(x, y, weight, p=2):
+    """
 
-    distance = (weight * ((x - y) ** p)) ** (1 / p)
+    Parameters
+    ----------
+    x : nd-array
+        Time series x.
+    y : nd-array
+        Time series y.
+    weight: nd-array
+        Axes weight.
+    p: int
+        Lp norm distance degree.
+
+    Returns
+    -------
+        The Lp norm distance.
+    """
+    distance = (weight * np.power(np.power(np.abs(x - y), p), (1 / p)))
 
     return distance
