@@ -7,7 +7,7 @@ def segmentation():
     data = load_ecg_example()
     cfg = get_distance_dict(["Dynamic Time Warping", "Euclidean Distance"])
     out = time_series_segmentation(
-        cfg, data["query"], data["sequence"], tq=data["tq"], ts=data["ts"], weight=data["weight"]
+        cfg, data["query"], data["sequence"], data["tq"], data["ts"], weight=data["weight"]
     )
 
     np.testing.assert_almost_equal(

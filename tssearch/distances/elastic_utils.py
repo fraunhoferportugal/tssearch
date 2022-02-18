@@ -1,7 +1,6 @@
 import numpy as np
-from numba import njit, prange, double
+from numba import njit, prange
 from tssearch.utils.preprocessing import standardization
-from tssearch.distances.lockstep_distances import euclidean_distance  # added to calculate LCSS matrix
 
 
 @njit(parallel=True, fastmath=True)
@@ -93,9 +92,9 @@ def acc_initialization(x, y, _type, tolerance=0):
     y: nd-array
         Time series y.
     _type: string
-        Name of dtw type
+        Name of dtw type.
     tolerance: int
-        Tolerance value
+        Tolerance value.
 
     Returns
     -------
@@ -131,7 +130,7 @@ def cost_matrix(x, y, alpha=1, weight=None):
     y: nd-array
         Time series y.
     dist: function
-        The distance used as a local cost measure. None defaults to the squared euclidean distance
+        The distance used as a local cost measure. None defaults to the squared euclidean distance.
 
     \**kwargs:
     See below:
@@ -380,7 +379,7 @@ def dtw_sw(x, y, winlen, alpha=0.5, **kwargs):
     y: nd-array
         Time series y.
     winlen: int
-        The sliding window length
+        The sliding window length.
     alpha: float
         A factor between 0 and 1 which weights the amplitude and derivative contributions.
         A higher value will favor amplitude and a lower value will favor the first derivative.

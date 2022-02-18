@@ -3,12 +3,27 @@ import pandas as pd
 from tssearch.search.segmentation import time_series_segmentation
 
 
-def time_series_distance(dict_distances, query, sequence, tq=None, ts=None):
+def time_series_distance(dict_distances, x, y, tx=None, ty=None):
     """
-    :param query: (Array) Time series one
-    :param sequence: (Array) Time series two
-    :param dict_distances: Dictionary of distances
-    :return: distances between time series
+
+    Parameters
+    ----------
+    dict_distances: dict
+        Dictionary of distances parameters.
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y.
+    tx: nd-array
+        Time stamp time series x.
+    ty: nd-array
+        Time stamp time series y.
+
+    Returns
+    -------
+    distances: pandas DataFrame
+        Distances values.
+
     """
 
     exec("from tssearch import *")
@@ -16,7 +31,7 @@ def time_series_distance(dict_distances, query, sequence, tq=None, ts=None):
     distance_results = []
     distance_names = []
 
-    multivariate = True if len(np.shape(query)) > 1 else False
+    multivariate = True if len(np.shape(x)) > 1 else False
 
     for d_type in dict_distances:
         for dist in dict_distances[d_type]:
@@ -37,9 +52,9 @@ def time_series_distance(dict_distances, query, sequence, tq=None, ts=None):
                 if "time" in parameters_total:
                     parameters_total_copy = parameters_total.copy()
                     del parameters_total_copy["time"]
-                    eval_result = locals()[func_total](query, sequence, tq, ts, **parameters_total_copy)
+                    eval_result = locals()[func_total](x, y, tx, ty, **parameters_total_copy)
                 else:
-                    eval_result = locals()[func_total](query, sequence, **parameters_total)
+                    eval_result = locals()[func_total](x, y, **parameters_total)
 
                 distance_results += [eval_result]
                 distance_names += [dist]
@@ -49,23 +64,46 @@ def time_series_distance(dict_distances, query, sequence, tq=None, ts=None):
     return distances
 
 
-def time_series_distance_windows(dict_distances, query, sequences, tq=None, ts=None, segmentation=None):
+def time_series_distance_windows(dict_distances, x, y, tx=None, ty=None, segmentation=None):
+    """
+
+    Parameters
+    ----------
+    dict_distances: dict
+        Dictionary of distances parameters.
+    x: nd-array
+        Time series x (query).
+    y: nd-array
+        Time series y (windows).
+    tx: nd-array
+        Time stamp time series x.
+    ty: nd-array
+        Time stamp time series y (windows).
+    segmentation: dict
+        Dictionary of distances parameters.
+
+    Returns
+    -------
+    dist_windows: pandas DataFrame
+        Distances values per window.
+
+    """
 
     if segmentation is not None:
-        results = time_series_segmentation(segmentation, query, sequences, tq, ts)
+        results = time_series_segmentation(segmentation, x, y, tx, ty)
         func_name = list(segmentation[list(dict_distances.keys())[0]].keys())[0]
 
-        ts_w = None if ts is None else []
+        ts_w = None if ty is None else []
         windows = []
         for i in range(len(results[func_name]) - 1):
-            if ts is not None:
-                ts_w += [ts[results[func_name][i] : results[func_name][i + 1]]]
-            windows += [sequences[results[func_name][i] : results[func_name][i + 1]]]
+            if ty is not None:
+                ts_w += [ty[results[func_name][i] : results[func_name][i + 1]]]
+            windows += [y[results[func_name][i] : results[func_name][i + 1]]]
     else:
-        windows = sequences
-        ts_w = ts
+        windows = y
+        ts_w = ty
 
-    multivariate = True if len(np.shape(query)) > 1 else False
+    multivariate = True if len(np.shape(x)) > 1 else False
 
     exec("from tssearch import *")
 
@@ -90,12 +128,12 @@ def time_series_distance_windows(dict_distances, query, sequences, tq=None, ts=N
                 if "time" in parameters_total:
                     parameters_total_copy = parameters_total.copy()
                     del parameters_total_copy["time"]
-                    for ts_window, window in zip(ts_w, windows):
-                        eval_result = locals()[func_total](query, window, tq, ts_window, **parameters_total_copy)
+                    for ty_window, window in zip(ts_w, windows):
+                        eval_result = locals()[func_total](x, window, tx, ty_window, **parameters_total_copy)
                         distance_results += [eval_result]
                 else:
                     for window in windows:
-                        eval_result = locals()[func_total](query, window, **parameters_total)
+                        eval_result = locals()[func_total](x, window, **parameters_total)
                         distance_results += [eval_result]
 
                 dist_windows[dist] = distance_results
