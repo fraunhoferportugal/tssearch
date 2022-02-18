@@ -1,5 +1,5 @@
 import numpy as np
-from numba import njit, prange, double
+from numba import njit, prange
 
 
 @njit(parallel=True, fastmath=True)
