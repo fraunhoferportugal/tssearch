@@ -12,8 +12,8 @@ def _lnorm_multidimensional(x, y, weight, p=2):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
     p: int
         Lp norm distance degree.
 
@@ -44,8 +44,8 @@ def _lnorm_unidimensional(x, y, weight, p=2):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
     p: int
         Lp norm distance degree.
 

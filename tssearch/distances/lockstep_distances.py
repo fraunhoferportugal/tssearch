@@ -16,8 +16,8 @@ def euclidean_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -52,8 +52,8 @@ def minkowski_distance(x, y, weight=None, p=3):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
     p: int
         Lp norm distance degree.
 
@@ -91,8 +91,8 @@ def manhattan_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -128,8 +128,8 @@ def chebyshev_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -164,8 +164,8 @@ def correlation_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -259,8 +259,8 @@ def braycurtis_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -287,8 +287,8 @@ def canberra_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -315,8 +315,8 @@ def cosine_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -343,8 +343,8 @@ def mahalanobis_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -371,8 +371,8 @@ def sqeuclidean_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------
@@ -399,8 +399,8 @@ def hamming_distance(x, y, weight=None):
         Time series x.
     y : nd-array
         Time series y.
-    weight: nd-array
-        Axes weight.
+    weight: nd-array (Default: None)
+        query weight values.
 
     Returns
     -------

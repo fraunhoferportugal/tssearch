@@ -79,7 +79,8 @@ def time_series_distance_windows(dict_distances, x, y, tx=None, ty=None, segment
         Time stamp time series x.
     ty: nd-array
         Time stamp time series y (windows).
-    segmentation:
+    segmentation: dict
+        Dictionary of distances parameters.
 
     Returns
     -------
