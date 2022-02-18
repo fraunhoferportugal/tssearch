@@ -66,17 +66,6 @@ def plot_alignment(ref_signal, estimated_signal, path, **kwargs):
         for i in range(len(path[0]))[::step]
     ]
 
-    ref_pks = ni.peakdelta(copy_ref, 0.5)
-    est_pks = ni.peakdelta(estimated_signal, 0.5)
-
-    if len(ref_pks[0]) > 0 and len(ref_pks[0]) == len(est_pks[0]):
-        for i in range(len(ref_pks[0])):
-            plt.plot([ref_pks[0][i, 0], est_pks[0][i, 0]], [ref_pks[0][i, 1], est_pks[0][i, 1]], "red")
-
-    if len(ref_pks[1]) > 0 and len(ref_pks[1]) == len(est_pks[1]):
-        for i in range(len(ref_pks[1])):
-            plt.plot([ref_pks[1][i, 0], est_pks[1][i, 0]], [ref_pks[1][i, 1], est_pks[1][i, 1]], "red")
-
 
 def plot_costmatrix(matrix, path):
     """
