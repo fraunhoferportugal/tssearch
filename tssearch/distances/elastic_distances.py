@@ -228,7 +228,7 @@ def twed(x, y, tx, ty, nu=0.001, lmbda=1.0, p=2, report="distance"):
             # Keep data points in both time series
             C[2] = (
                 ac[i - 1, j - 1]
-                + dlp(query[i], sequence[j], degree)
+                + dlp(query[i], sequence[j], p)
                 + dlp(query[i - 1], sequence[j - 1], p)
                 + nu * (abs(tq[i] - ts[j]) + abs(tq[i - 1] - ts[j - 1]))
             )
