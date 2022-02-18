@@ -12,13 +12,7 @@ if __name__ == "__main__":
     query = np.sin(t[:70])
 
     dict_distances = {
-        "lockstep": {
-            "Euclidean Distance": {
-                "function": "euclidean_distance",
-                "parameters": "",
-                "use": "yes"
-            }
-        }
+        "lockstep": {"Euclidean Distance": {"function": "euclidean_distance", "parameters": "", "use": "yes"}}
     }
 
     result1 = time_series_search(dict_distances, query, sequence, output=("number", 1))
@@ -34,13 +28,7 @@ if __name__ == "__main__":
     query = sequence[70:140]
 
     dict_distances = {
-        "elastic": {
-            "Dynamic Time Warping":
-                {"function": "dtw",
-                 "parameters": {"dtw_type": "sub-dtw"},
-                 "use": "yes"
-                 }
-        }
+        "elastic": {"Dynamic Time Warping": {"function": "dtw", "parameters": {"dtw_type": "sub-dtw"}, "use": "yes"}}
     }
 
     result2 = time_series_search(dict_distances, query, sequence, output=("number", 1))
@@ -58,13 +46,7 @@ if __name__ == "__main__":
     weight[:, 1] = 0.8
 
     dict_distances = {
-        "elastic": {
-            "Dynamic Time Warping": {
-                "function": "dtw",
-                "parameters": {"dtw_type": "sub-dtw"},
-                "use": "yes"
-            }
-        }
+        "elastic": {"Dynamic Time Warping": {"function": "dtw", "parameters": {"dtw_type": "sub-dtw"}, "use": "yes"}}
     }
 
     result3 = time_series_search(dict_distances, query, sequence, weight=weight, output=("number", 1))

@@ -3,7 +3,7 @@ from tssearch.distances.elastic_utils import traceback_adj, lcss_path, lcss_scor
 from tssearch.search.search_utils import lockstep_search, elastic_search, start_sequences_index
 
 
-def time_series_search(dict_distances, x, y, tx=None, ty=None, weight=None, output=("number", 1)):
+def time_series_search(dict_distances, query, sequence, tq=None, ts=None, weight=None, output=("number", 1)):
     """
     Time series search method locates the k-best occurrences of a given query on a more extended sequence based on a
     distance measurement.
@@ -12,14 +12,14 @@ def time_series_search(dict_distances, x, y, tx=None, ty=None, weight=None, outp
     ----------
     dict_distances: dict
         Configuration file with distances.
-    x: nd-array
-        Time series x (query).
-    y: nd-array
-        Time series y.
-    tx: nd-array
-        Time stamp time series x.
-    ty: nd-array
-        Time stamp time series y.
+    query: nd-array
+        Query time series.
+    sequence: nd-array
+        Sequence time series.
+    tq: nd-array
+        Time stamp time series query.
+    ts: nd-array
+        Time stamp time series sequence.
     weight: nd-array (Default: None)
         query weight values.
     output: tuple
@@ -31,7 +31,7 @@ def time_series_search(dict_distances, x, y, tx=None, ty=None, weight=None, outp
         time instants, optimal alignment path and distance for each occurrence per distance.
     """
 
-    l_query = len(x)
+    l_query = len(query)
     distance_results = {}
 
     for d_type in dict_distances:
@@ -40,7 +40,7 @@ def time_series_search(dict_distances, x, y, tx=None, ty=None, weight=None, outp
             if "use" not in dict_distances[d_type][dist] or dict_distances[d_type][dist]["use"] == "yes":
                 distance_results[dist] = {}
                 if d_type == "lockstep":
-                    distance = lockstep_search(dict_distances[d_type][dist], x, y, weight)
+                    distance = lockstep_search(dict_distances[d_type][dist], query, sequence, weight)
 
                     start_index = start_sequences_index(distance, output=output, overlap=l_query)
                     end_index, path = [], []
@@ -49,16 +49,16 @@ def time_series_search(dict_distances, x, y, tx=None, ty=None, weight=None, outp
                         path += [(np.arange(l_query), np.arange(start, end_index[-1]))]
                     distance_results[dist]["path_dist"] = distance[start_index]
                 elif d_type == "elastic":
-                    distance, ac = elastic_search(dict_distances[d_type][dist], x, y, tx, ty, weight)
+                    distance, ac = elastic_search(dict_distances[d_type][dist], query, sequence, tq, ts, weight)
 
                     if dist == "Longest Common Subsequence":
                         eps = dict_distances[d_type][dist]["parameters"]["eps"]
-                        if len(np.shape(x)) == 1:
-                            query_copy = x.reshape(-1, 1)
-                            sequence_copy = y.reshape(-1, 1)
+                        if len(np.shape(query)) == 1:
+                            query_copy = query.reshape(-1, 1)
+                            sequence_copy = sequence.reshape(-1, 1)
                             path = [lcss_path(query_copy, sequence_copy, ac, eps)]
                         else:
-                            path = [lcss_path(x, y, ac, eps)]
+                            path = [lcss_path(query, sequence, ac, eps)]
                         distance_results[dist]["path_dist"] = [lcss_score(ac)]
                         end_index = [path_i[1][-1] for path_i in path]
                     else:

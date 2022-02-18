@@ -2,7 +2,7 @@ import numpy as np
 from scipy.signal import find_peaks
 
 
-def elastic_search(dict_distances, x, y, tx=None, ty=None, weight=None):
+def elastic_search(dict_distances, query, sequence, tq=None, ts=None, weight=None):
     """
     Query search for elastic measures
 
@@ -10,14 +10,14 @@ def elastic_search(dict_distances, x, y, tx=None, ty=None, weight=None):
     ----------
     dict_distances: dict
         Configuration file with distances
-    x: nd-array
-        Time series x (query).
-    y: nd-array
-        Time series y.
-    tx: nd-array
-        Time stamp time series x.
-    ty: nd-array
-        Time stamp time series y.
+    query: nd-array
+        Query time series.
+    sequence: nd-array
+        Sequence time series.
+    tq: nd-array
+        Time stamp time series query.
+    ts: nd-array
+        Time stamp time series sequence.
     weight: nd-array (Default: None)
         query weight values
 
@@ -47,14 +47,14 @@ def elastic_search(dict_distances, x, y, tx=None, ty=None, weight=None):
     if "time" in parameters_total:
         parameters_total_copy = parameters_total.copy()
         del parameters_total_copy["time"]
-        distances, ac = locals()[func_total](x, y, tx, ty, **parameters_total_copy)
+        distances, ac = locals()[func_total](query, sequence, tq, ts, **parameters_total_copy)
     else:
-        distances, ac = locals()[func_total](x, y, **parameters_total)
+        distances, ac = locals()[func_total](query, sequence, **parameters_total)
 
     return distances, ac
 
 
-def lockstep_search(dict_distances, x, y, weight):
+def lockstep_search(dict_distances, query, sequence, weight):
     """
     Query search for lockstep measures
 
@@ -62,10 +62,10 @@ def lockstep_search(dict_distances, x, y, weight):
     ----------
     dict_distances: dict
         Configuration file with distances
-    x: nd-array
-        Time series x (query).
-    y: nd-array
-        Time series y.
+    query: nd-array
+        Query time series.
+    sequence: nd-array
+        Sequence time series.
     weight: nd-array (Default: None)
         query weight values
 
@@ -85,12 +85,12 @@ def lockstep_search(dict_distances, x, y, weight):
     if dict_distances["parameters"] != "":
         parameters_total = dict_distances["parameters"]
 
-    lw = len(x)
-    res = np.zeros(len(y) - lw, "d")
-    for i in range(len(y) - lw):
-        seq_window = y[i : i + lw]
+    lw = len(query)
+    res = np.zeros(len(sequence) - lw, "d")
+    for i in range(len(sequence) - lw):
+        seq_window = sequence[i : i + lw]
 
-        eval_result = locals()[func_total](seq_window, x, weight, **parameters_total)
+        eval_result = locals()[func_total](seq_window, query, weight, **parameters_total)
 
         res[i] = eval_result / lw  # default normalization
 

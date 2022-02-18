@@ -53,6 +53,6 @@ def _lnorm_unidimensional(x, y, weight, p=2):
     -------
         The Lp norm distance.
     """
-    distance = (weight * np.power(np.power(np.abs(x - y), p), (1 / p)))
+    distance = weight * np.power(np.power(np.abs(x - y), p), (1 / p))
 
     return distance
