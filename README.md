@@ -1,3 +1,9 @@
+<div align="center">
+  <img width="70%" src="./docs/imgs/logo.jpg">
+</div>
+
+-----------------
+
 [![license](https://img.shields.io/badge/License-BSD%203-brightgreen)](https://github.com/fraunhoferportugal/tssearch/blob/master/LICENSE.txt)
 [![Documentation Status](https://readthedocs.org/projects/tssearch/badge/?version=latest)](https://tssearch.readthedocs.io/en/latest/?badge=latest)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tssearch)

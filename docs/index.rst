@@ -1,3 +1,11 @@
+.. image:: imgs/logo.jpg
+   :width: 70 %
+   :alt: Logo
+   :align: center
+
+|
+|
+
 Welcome to TSSEARCH documentation!
 ==================================
 
