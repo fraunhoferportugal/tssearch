@@ -73,5 +73,4 @@ The documentation is available [here](https://tssearch.readthedocs.io/en/latest/
 
 
 ## Acknowledgements
-This work was supported by the project Geolocation non-Assisted by GPS for Mobile Networks in Indoor and Outdoor Environment (GARMIO), co-funded by Portugal 2020, framed through the COMPETE 2020 (Operational Programme Competitiveness and Internationalization) and European Regional Development Fund (ERDF) from European Union (EU) under Grant POCI-01-0247-FEDER-033479.
-
+This work is a result of the project ConnectedHealth (n.º 46858), supported by Competitiveness and Internationalisation Operational Programme (POCI) and Lisbon Regional Operational Programme (LISBOA 2020), under the PORTUGAL 2020 Partnership Agreement, through the European Regional Development Fund (ERDF)
