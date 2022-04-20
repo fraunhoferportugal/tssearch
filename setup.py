@@ -6,12 +6,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tssearch",
-    version="0.1.1",
+    version="0.1.2",
     author="Fraunhofer Portugal",
     description="Library for time series subsequence search",
     long_description=long_description,
     long_description_content_type="text/markdown",
     download_url="https://github.com/fraunhoferportugal/tssearch/archive/refs/tags/v0.1.1.tar.gz",
+    package_data={'tssearch': ['distances/distances.json', 'examples/ecg.pickle']},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
