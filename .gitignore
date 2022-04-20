@@ -118,3 +118,7 @@ dmypy.json
 
 *.pdf
 
+# documentation
+docs/_twed.py
+docs/_lcss.py
+docs/_dtw.py

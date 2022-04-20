@@ -7,7 +7,7 @@
       "parameters": {
         "nu": 1e-3,
         "lmbda": 0,
-        "degree": 2,
+        "p": 2,
         "time": "true"
       },
       "use": "yes"
