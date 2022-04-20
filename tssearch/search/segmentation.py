@@ -2,7 +2,7 @@ from scipy.signal import find_peaks
 from tssearch.search.search_utils import lockstep_search, elastic_search
 
 
-def time_series_segmentation(dict_distances, x, y, tx=None, ty=None, weight=None):
+def time_series_segmentation(dict_distances, query, sequence, tq=None, ts=None, weight=None):
     """
     Time series segmentation locates the time instants between consecutive query repetitions on a more extended and
     repetitive sequence.
@@ -11,14 +11,14 @@ def time_series_segmentation(dict_distances, x, y, tx=None, ty=None, weight=None
     ----------
     dict_distances: dict
         Configuration file with distances
-    x: nd-array
-        Time series x (query).
-    y: nd-array
-        Time series y.
-    tx: nd-array
-        Time stamp time series x.
-    ty: nd-array
-        Time stamp time series y.
+    query: nd-array
+        Query time series.
+    sequence: nd-array
+        Sequence time series.
+    tq: nd-array
+        Time stamp time series query.
+    ts: nd-array
+        Time stamp time series sequence.
     weight: nd-array (Default: None)
         query weight values
     Returns
@@ -27,7 +27,7 @@ def time_series_segmentation(dict_distances, x, y, tx=None, ty=None, weight=None
         Segmented time instants for each given distances
     """
 
-    l_query = len(x)
+    l_query = len(query)
     segment_results = {}
 
     for d_type in dict_distances:
@@ -36,9 +36,9 @@ def time_series_segmentation(dict_distances, x, y, tx=None, ty=None, weight=None
             if "use" not in dict_distances[d_type][dist] or dict_distances[d_type][dist]["use"] == "yes":
                 segment_results[dist] = {}
                 if d_type == "lockstep":
-                    distance = lockstep_search(dict_distances[d_type][dist], x, y, weight)
+                    distance = lockstep_search(dict_distances[d_type][dist], query, sequence, weight)
                 elif d_type == "elastic":
-                    distance, ac = elastic_search(dict_distances[d_type][dist], x, y, tx, ty, weight)
+                    distance, ac = elastic_search(dict_distances[d_type][dist], query, sequence, tq, ts, weight)
                 else:
                     print("WARNING")
                     continue

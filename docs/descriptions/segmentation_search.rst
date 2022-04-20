@@ -13,12 +13,11 @@ You will need to define the distance used for segmentation and provide a query a
 .. code:: python
 
     import tssearch
-    import numpy as np
 
-    query, weights, sequence = tssearch.examples.get_ecg_example_data()
+    data = tssearch.load_ecg_example()
     cfg = tssearch.get_distance_dict(["Dynamic Time Warping"])
 
-    out = tssearch.time_series_segmentation(cfg, query, weights, sequence)
+    out = tssearch.time_series_segmentation(cfg, data["query"], data["sequence"], data["weight"])
 
 In the code above a ten-second segment from an electrocardiography record is used to define the query and the sequence and the DTW is defined as the distance for the segmentation. Then, the segmentation is calculated and the output is assigned to a variable. The method receives as inputs the configuration file, the query, and the sequence. Additionally, an optional vector input that assigns weights for each time instance of the query is also given as input.
 

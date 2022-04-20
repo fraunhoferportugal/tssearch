@@ -1,3 +1,9 @@
+<div align="center">
+  <img width="70%" src="./docs/imgs/logo.jpg">
+</div>
+
+-----------------
+
 [![license](https://img.shields.io/badge/License-BSD%203-brightgreen)](https://github.com/fraunhoferportugal/tssearch/blob/master/LICENSE.txt)
 [![Documentation Status](https://readthedocs.org/projects/tssearch/badge/?version=latest)](https://tssearch.readthedocs.io/en/latest/?badge=latest)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tssearch)
@@ -34,18 +40,18 @@ The code below segments a 10 s electrocardiography record:
 ```python
 import tssearch
 
-# Load the query, (optional) weight vector and sequence  
-query, weights, sequence = tssearch.examples.get_ecg_example_data()
+# Load the query, (optional) weight vector and sequence
+data = tssearch.load_ecg_example()
 
 # Selects the Dynamic Time Warping (DTW) as the distance for the segmentation
 cfg = tssearch.get_distance_dict(["Dynamic Time Warping"])
 
 # Performs the segmentation
-out = tssearch.time_series_segment(cfg, query, sequence, weights)
+out = tssearch.time_series_segmentation(cfg, data['query'], data['sequence'], data['weight'])
 ```
 
 ### Documentation
-The documentation is available [here](https://tssearch.readthedocs.io/en/latest/)
+The documentation is available [here](https://tssearch.readthedocs.io/en/latest/).
 
 ## Available distances
 
@@ -67,5 +73,4 @@ The documentation is available [here](https://tssearch.readthedocs.io/en/latest/
 
 
 ## Acknowledgements
-This work was supported by the project Geolocation non-Assisted by GPS for Mobile Networks in Indoor and Outdoor Environment (GARMIO), co-funded by Portugal 2020, framed through the COMPETE 2020 (Operational Programme Competitiveness and Internationalization) and European Regional Development Fund (ERDF) from European Union (EU) under Grant POCI-01-0247-FEDER-033479.
-
+This work is a result of the project ConnectedHealth (n.º 46858), supported by Competitiveness and Internationalisation Operational Programme (POCI) and Lisbon Regional Operational Programme (LISBOA 2020), under the PORTUGAL 2020 Partnership Agreement, through the European Regional Development Fund (ERDF)
