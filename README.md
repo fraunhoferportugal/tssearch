@@ -71,6 +71,11 @@ The documentation is available [here](https://tssearch.readthedocs.io/en/latest/
 |--------------------------------------|
 | Time Alignment Measurement (TAM)     |
 
+## Citing
+When using TSSEARCH please cite the following publication:
+
+Folgado, Duarte and Barandas, Marília, et al. "*TSSEARCH: Time Series Subsequence Search Library*" SoftwareX 11 (2022). [https://doi.org/10.1016/j.softx.2022.101049](https://doi.org/10.1016/j.softx.2022.101049)
+
 
 ## Acknowledgements
 This work is a result of the project ConnectedHealth (n.º 46858), supported by Competitiveness and Internationalisation Operational Programme (POCI) and Lisbon Regional Operational Programme (LISBOA 2020), under the PORTUGAL 2020 Partnership Agreement, through the European Regional Development Fund (ERDF)
