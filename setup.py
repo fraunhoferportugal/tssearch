@@ -27,8 +27,7 @@ setuptools.setup(
     package_data={"tssearch": ["distances/distances.json", "examples/ecg.pickle"]},
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: BSD License",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX",
         "Operating System :: Unix",
