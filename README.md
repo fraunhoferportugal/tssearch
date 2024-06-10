@@ -7,8 +7,9 @@
 [![license](https://img.shields.io/badge/License-BSD%203-brightgreen)](https://github.com/fraunhoferportugal/tssearch/blob/master/LICENSE.txt)
 [![Documentation Status](https://readthedocs.org/projects/tssearch/badge/?version=latest)](https://tssearch.readthedocs.io/en/latest/?badge=latest)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/tssearch)
-![PyPI](https://img.shields.io/pypi/v/tssearch)
+![PyPI](https://img.shields.io/pypi/v/tssearch?logo=pypi&color=blue)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Downloads](https://pepy.tech/badge/tssearch)](https://pepy.tech/project/tssearch)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fraunhoferportugal/tssearch/blob/master/notebooks/Query_search_unidimensional.ipynb)
 
 # Time Series Subsequence Search Library
@@ -27,10 +28,10 @@ segmentation and query search
 
 ## Get started
 
-### Installation
-TSSEARCH is available at PyPI:
+### ⚙️ Installation
+TSSEARCH supports Python 3.8 or greater. You can easily install via PyPI:
 
-```python
+```bash
 pip install tssearch
 ```
 
