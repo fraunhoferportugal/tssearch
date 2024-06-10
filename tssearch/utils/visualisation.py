@@ -38,21 +38,39 @@ def plot_alignment(ref_signal, estimated_signal, path, **kwargs):
           A list containing the colors for the reference, estimated and connection
           plots, respectively.
           (default: ``[sns.color_palette()[0], sns.color_palette()[1], 'k']``)
+
+        * *label* (``list``) --
+            A list containing the labels for the reference and estimated signals.
+            (default: ``['Reference', 'Estimated']``)
     """
 
     step = kwargs.get("step", 2)
     hoffset = kwargs.get("hoffset", 0)
-    voffset = kwargs.get("offset", 2)
+    voffset = kwargs.get("offset", 2) * np.max(ref_signal)
     linewidths = kwargs.get("linewidths", [3, 3, 0.5])
     colors = kwargs.get("colors", [sns.color_palette()[0], sns.color_palette()[1], "k"])
+    label = kwargs.get("label", ["Reference", "Estimated"])
 
-    copy_ref = np.copy(ref_signal)  # This prevents unexpected changes in the reference signal after the duplicate
-    copy_ref += voffset * np.max(ref_signal)  # Set an offset for visualization
-
+    # This prevents unexpected changes in the reference signal after the duplicate
+    # Set an offset for visualization
+    copy_ref = np.copy(ref_signal) + voffset  
     xref = np.arange(len(copy_ref)) + hoffset
+    
     # Actual plot occurs here
-    plt.plot(xref, copy_ref, color=sns.color_palette()[0], lw=linewidths[0], label="reference")
-    plt.plot(estimated_signal, color=sns.color_palette()[1], lw=linewidths[1], label="estimate")
+    # Get current axis 
+    ax = plt.gca()
+    
+    # Create secondary axis to the right, that counteracts the offset
+    ax2 = ax.secondary_yaxis('right', functions=(lambda x: x - voffset, lambda x: x + voffset))
+    
+    # plot offset/reference and adjust tick colors
+    ax.plot(xref, copy_ref, color=sns.color_palette()[0], lw=linewidths[0], label=label[0])
+    plt.setp(ax2.get_yticklabels(), color=sns.color_palette()[0])
+    
+    # plot non-offset/estimatied signal and adjust tick colors
+    ax.plot(estimated_signal, color=sns.color_palette()[1], lw=linewidths[1], label=label[1])
+    plt.setp(ax.get_yticklabels(), color=sns.color_palette()[1])
+    
     plt.legend(fontsize=17)
 
     [
